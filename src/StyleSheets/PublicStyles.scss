@@ -1,0 +1,69 @@
+@import "~antd/dist/reset.css";
+
+$heightRegular: 100px;
+$heightLarge: 300px;
+$desktop-large: "screen and (min-width: 2000px) and (orientation: landscape)";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    background-color: #FFFFFF;
+}
+
+.ant-layout {
+    background: transparent;
+}
+
+.layoutHeader {
+    position: relative;
+    z-index: 10;
+    height: $heightRegular;
+    line-height: $heightRegular;
+    background-color: transparent;
+    padding: 0;
+
+    @media #{$desktop-large} {
+        height: $heightLarge;
+        line-height: $heightLarge;
+    }
+}
+
+.layoutContent {
+    position: fixed;
+    top: $heightRegular;
+    bottom: $heightRegular;
+    left: 0;
+    right: 0;
+
+    @media #{$desktop-large} {
+        top: $heightLarge;
+        bottom: $heightLarge;
+    }
+}
+
+.layoutFooter {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: transparent;
+    height: $heightRegular;
+    line-height: $heightRegular;
+    padding: 0;
+
+    @media #{$desktop-large} {
+        height: $heightLarge;
+        line-height: $heightLarge;
+    }
+}
+
+.floatingButton {
+    box-shadow:
+        0 6px 16px 0 rgba(0, 0, 0, 0.08),
+        0 3px 6px -4px rgba(0, 0, 0, 0.12),
+        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}

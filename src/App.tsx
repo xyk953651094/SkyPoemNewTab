@@ -1,26 +1,89 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {useEffect, useState} from "react";
+import {Col, Flex, Layout, Row, Space} from "antd";
+import "./StyleSheets/PublicStyles.scss"
+import {getFontColor} from "./TypeScripts/PublicFunctions";
+import {getExtensionStorage, fixPreference} from "./TypeScripts/StorageFunctions";
+import {PreferenceInterface, ThemeInterface} from "./TypeScripts/PublicInterface";
+import {defaultPreference, defaultTheme} from "./TypeScripts/PublicConstants";
+import PoemComponent from "./Components/PoemComponent";
+import TodoComponent from "./Components/TodoComponent";
+import DailyComponent from "./Components/CountdownComponent";
+import FocusComponent from "./Components/FocusComponent";
+import MenuComponent from "./Components/MenuComponent";
+import SunComponent from "./Components/SunComponent";
+import WaveComponent from "./Components/WaveComponent";
+
+const {Header, Content, Footer} = Layout;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [theme, setTheme] = useState<ThemeInterface>({
+        ...defaultTheme,
+        primaryFontColor: getFontColor(defaultTheme.primaryColor),
+        secondaryFontColor: getFontColor(defaultTheme.secondaryColor),
+    });
+    const [preference, setPreference] = useState<PreferenceInterface>(defaultPreference);
+
+    function getTheme(value: any) {
+        setTheme({
+            primaryColor: value.primaryColor,
+            secondaryColor: value.secondaryColor,
+            primaryFontColor: getFontColor(value.primaryColor),
+            secondaryFontColor: getFontColor(value.secondaryColor),
+            svgColors: value.svgColors
+        });
+    }
+
+    // 仅在组件挂载时从 storage 加载偏好
+    useEffect(() => {
+        getExtensionStorage(["preference"]).then((result) => {
+            const [preferenceStorage] = result;
+            if (preferenceStorage) {
+                setPreference(fixPreference(preferenceStorage));
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        if (theme.primaryColor && theme.primaryFontColor) {
+            document.body.style.backgroundColor = theme.primaryColor;
+            document.body.style.color = theme.primaryFontColor;
+            document.body.style.transition = "background-color 0.3s, color 0.3s";
+        }
+    }, [theme.primaryColor, theme.primaryFontColor]);
+
+    return (
+        <Layout>
+            <Header className={"layoutHeader"}>
+                <SunComponent theme={theme}/>
+                <Row justify={"center"}>
+                    <Col span={20} style={{textAlign: "right"}}>
+                        <Space align={"center"}>
+                            <TodoComponent theme={theme}/>
+                            <DailyComponent theme={theme}/>
+                            <FocusComponent theme={theme}/>
+                            <MenuComponent
+                                theme={theme}
+                                preference={preference}
+                                getPreference={setPreference}
+                            />
+                        </Space>
+                    </Col>
+                </Row>
+            </Header>
+            <Content className={"layoutContent"}>
+                <Flex justify="center" align="center" style={{height: "100%"}}>
+                    <PoemComponent
+                        theme={theme}
+                        preference={preference}
+                        getTheme={getTheme}
+                    />
+                </Flex>
+            </Content>
+            <Footer className={"layoutFooter"}>
+                <WaveComponent theme={theme}/>
+            </Footer>
+        </Layout>
+    );
 }
 
 export default App;
