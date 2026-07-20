@@ -43,6 +43,8 @@ export function FillButton({theme, icon, children, onClick, fontSize}: FillButto
                 style={{
                     color: theme.secondaryColor,
                     fontSize: fontSize,
+                    height: "auto",
+                    padding: "8px 16px",
                     cursor: onClick ? "pointer" : "default"
                 }}
                 onClick={onClick}

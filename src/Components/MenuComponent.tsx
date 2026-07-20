@@ -4,7 +4,7 @@ import {MenuFoldOutlined, StarOutlined, ToTopOutlined} from "@ant-design/icons";
 import {deviceType} from "../TypeScripts/PublicConstants";
 import MenuInfoComponent from "./MenuComponents/MenuInfoComponent";
 import MenuContactComponent from "./MenuComponents/MenuContactComponent";
-// import MenuPreferenceComponent from "./MenuComponents/MenuPreferenceComponent";
+import MenuPreferenceComponent from "./MenuComponents/MenuPreferenceComponent";
 import {PreferenceInterface, ThemeInterface} from "../TypeScripts/PublicInterface";
 import {HoverButton} from "./PublicComponents/PublicButton";
 import {getGreetInfo} from "../TypeScripts/GreetComponent";
@@ -89,10 +89,10 @@ function MenuComponent(props: MenuComponentProps) {
                 }
             >
                 <Space orientation={"vertical"} size={"large"} ref={drawerContentRef}>
-                    {/*<MenuPreferenceComponent*/}
-                    {/*    theme={props.theme}*/}
-                    {/*    preference={props.preference}*/}
-                    {/*    getPreference={props.getPreference}/>*/}
+                    <MenuPreferenceComponent
+                        theme={props.theme}
+                        preference={props.preference}
+                        getPreference={props.getPreference}/>
                     <MenuInfoComponent theme={props.theme}/>
                     <MenuContactComponent theme={props.theme}/>
                     <Row justify={"center"}>

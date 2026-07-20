@@ -10,10 +10,13 @@ interface SunComponentProps {
 function SunComponent(props: SunComponentProps) {
     return (
         <div className="sunDiv zIndexLow">
-            <svg className="sunSvg">
-                <circle id="sunCircle3" className="svgAnimation" cx="0" cy="0" r="140" fill={props.theme.svgColors[2]}/>
-                <circle id="sunCircle2" className="svgAnimation" cx="0" cy="0" r="130" fill={props.theme.svgColors[1]}/>
-                <circle id="sunCircle1" className="svgAnimation" cx="0" cy="0" r="120" fill={props.theme.svgColors[0]}/>
+            <svg className="sunSvg" viewBox="0 0 200 200">
+                <circle id="sunCircle3" className="svgAnimation" cx="0" cy="0" r="140"
+                        fill={props.theme.svgColors[2]} opacity="0.75"/>
+                <circle id="sunCircle2" className="svgAnimation" cx="0" cy="0" r="130"
+                        fill={props.theme.svgColors[1]} opacity="0.9"/>
+                <circle id="sunCircle1" className="svgAnimation" cx="0" cy="0" r="120"
+                        fill={props.theme.svgColors[0]}/>
             </svg>
         </div>
     );

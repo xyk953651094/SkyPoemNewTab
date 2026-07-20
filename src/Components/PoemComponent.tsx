@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Flex, Form, Input, message, Tooltip, Typography} from "antd";
+import {Flex, Input, message, Space} from "antd";
 import {EditOutlined, RedoOutlined, StopOutlined} from "@ant-design/icons";
 import {ThemeInterface, PreferenceInterface} from "../TypeScripts/PublicInterface";
 import {setTheme, createThemedMessage, truncateText} from "../TypeScripts/PublicFunctions";
@@ -9,7 +9,6 @@ import {httpRequest} from "../TypeScripts/RequestFunctions";
 import {FillButton, HoverButton} from "./PublicComponents/PublicButton";
 import {PublicModal} from "./PublicComponents/PublicModal";
 
-const {Text} = Typography;
 const poemMaxSize = 30;
 
 interface PoemComponentProps {
@@ -63,7 +62,7 @@ function PoemComponent(props: PoemComponentProps) {
 
     // 从 API 获取诗词
     async function fetchPoem() {
-        const topic = preference.autoTopic ? "all" : preference.poemTopic;
+        const topic = preference.poemTopic;
         const url = `https://v1.jinrishici.com/${topic}`;
 
         try {
@@ -149,27 +148,28 @@ function PoemComponent(props: PoemComponentProps) {
         }
 
         init();
-    }, [preference.autoTopic, preference.poemTopic]);
+    }, [preference.poemTopic]);
 
     return (
         <>
             <Flex vertical align="center" gap={8}>
-                <FillButton theme={theme} fontSize="24px">
+                <FillButton theme={theme} fontSize="clamp(24px, 2vw, 42px)">
                     {poemContent}
                 </FillButton>
-                <Tooltip title={customPoem ? "正在显示自定诗词" : "点击设置自定诗词"}
-                         placement="bottom"
-                         color={theme.secondaryColor}>
-                    <FillButton theme={theme} fontSize="16px" onClick={() => setDisplayModal(true)}>
-                        {poemAuthor}
-                    </FillButton>
-                </Tooltip>
-                <FillButton theme={theme} icon={<RedoOutlined />} onClick={() => {
-                    getTheme(setTheme());
-                    fetchPoem();
-                }}>
-                    {"换一首"}
+                <FillButton theme={theme} fontSize="clamp(16px, 1.2vw, 26px)">
+                    {poemAuthor}
                 </FillButton>
+                <Flex gap={8}>
+                    <FillButton theme={theme} icon={<RedoOutlined />} onClick={() => {
+                        getTheme(setTheme());
+                        fetchPoem();
+                    }}>
+                        {"换一首"}
+                    </FillButton>
+                    <FillButton theme={theme} icon={<EditOutlined />} onClick={() => setDisplayModal(true)}>
+                        {"自定义"}
+                    </FillButton>
+                </Flex>
             </Flex>
 
             <PublicModal
@@ -180,8 +180,7 @@ function PoemComponent(props: PoemComponentProps) {
                 onOk={handleModalOk}
                 onCancel={handleModalCancel}
             >
-                <Form>
-                    <Form.Item label={<Text style={{color: theme.secondaryFontColor}}>{"诗词内容"}</Text>}>
+                <Space orientation="vertical" style={{width: "100%"}}>
                         <Input
                             style={{color: theme.secondaryFontColor, backgroundColor: theme.primaryColor}}
                             placeholder="请输入诗词内容"
@@ -191,8 +190,6 @@ function PoemComponent(props: PoemComponentProps) {
                             showCount
                             allowClear
                         />
-                    </Form.Item>
-                    <Form.Item label={<Text style={{color: theme.secondaryFontColor}}>{"作者信息"}</Text>}>
                         <Input
                             style={{color: theme.secondaryFontColor, backgroundColor: theme.primaryColor}}
                             placeholder="请输入作者信息"
@@ -202,7 +199,6 @@ function PoemComponent(props: PoemComponentProps) {
                             showCount
                             allowClear
                         />
-                    </Form.Item>
                     {customPoem && (
                         <Flex justify="center">
                             <HoverButton theme={theme} icon={<StopOutlined/>} onClick={handleDisableCustomPoem}>
@@ -210,7 +206,7 @@ function PoemComponent(props: PoemComponentProps) {
                             </HoverButton>
                         </Flex>
                     )}
-                </Form>
+                </Space>
             </PublicModal>
         </>
     );

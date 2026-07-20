@@ -1,20 +1,20 @@
 .waveDiv {
     width: 100%;
-    height: 100px;
+    height: clamp(80px, 12vh, 200px);
 }
 
 .waveDiv .waveSvg {
     width: 100%;
-    height: 100px;
+    height: clamp(80px, 12vh, 200px);
     position: absolute;
     bottom: 0;
     left: 0;
     z-index: 2;
-    filter: drop-shadow(0px 6px 16px rgba(0, 0, 0, 0.2))
 }
 
 .waveSvg .wave {
     animation: move 3s linear infinite;
+    will-change: transform;
 }
 
 .waveSvg .wave:nth-child(1) {
@@ -33,27 +33,19 @@
 }
 
 @keyframes move {
-    from {
-        transform: translate(-90px, 0%);
+    0% {
+        transform: translate(-90px, 0);
     }
-    to {
-        transform: translate(85px, 0%);
+    50% {
+        transform: translate(-2px, -2px);
+    }
+    100% {
+        transform: translate(85px, 0);
     }
 }
 
-/*移动端竖屏样式*/
-@media screen and (max-width: 500px) and (orientation: portrait) {
-    .waveDiv {
-        width: 100%;
-        height: 75px;
-    }
-
-    .waveDiv .waveSvg {
-        width: 100%;
-        height: 75px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        z-index: 2;
+@media (prefers-reduced-motion: reduce) {
+    .waveSvg .wave {
+        animation: none;
     }
 }

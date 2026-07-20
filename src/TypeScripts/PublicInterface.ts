@@ -6,12 +6,9 @@ export interface ThemeInterface {
     svgColors: string[];
 }
 
-// TODO
 export interface PreferenceInterface {
     poemTopic: string,
-    autoTopic: boolean,
-    fontFamily: "cursive" | "sansSerif",
-    fontVariant: "simplified" | "traditional"
+    fontFamily: "cursive" | "sansSerif"
 }
 
 export interface ExtensionDataInterface {
