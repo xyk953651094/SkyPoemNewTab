@@ -6,9 +6,16 @@ export interface ThemeInterface {
     svgColors: string[];
 }
 
+export interface CustomThemeInterface {
+    primaryColor: string;
+    secondaryColor: string;
+    svgColors: string[];
+}
+
 export interface PreferenceInterface {
     poemTopic: string,
-    fontFamily: "cursive" | "sansSerif"
+    fontFamily: "cursive" | "sansSerif",
+    customTheme: CustomThemeInterface | null
 }
 
 export interface ExtensionDataInterface {

@@ -10,7 +10,8 @@ export const environment = process.env.NODE_ENV ?? "development";
 
 export const defaultPreference: PreferenceInterface = {
     poemTopic: "all",
-    fontFamily: "cursive"
+    fontFamily: "cursive",
+    customTheme: null
 }
 
 // TODO:如果后续不再增加别的功能，例如数据导入导出、待办、倒数日之类的，这个常量可以删除。

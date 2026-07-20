@@ -73,12 +73,9 @@ export function getObjectClassName() {
     return chinaObject[index];
 }
 
-// 设置颜色主题：随机选取或返回用户自定颜色
-// 自定颜色状态存储在 localStorage 中（setTheme 为同步调用，无法使用异步的 extension storage）
+// 设置颜色主题：从明/暗色板中随机选取（夜间 18:00–06:00 使用深色背景）
+// 纯随机函数，不读取任何存储；自定颜色由调用方通过 preference.customTheme ?? setTheme() 决策
 export function setTheme() {
-    let tempTheme;
-
-    // 随机颜色主题：夜间（18:00–06:00）使用深色背景
     let currentHour = parseInt(getTimeDetails(new Date()).hour);
     let themeArray = (currentHour > 18 || currentHour < 6) ? darkThemeArray : lightThemeArray;
 
@@ -87,18 +84,7 @@ export function setTheme() {
     }
 
     let randomNum = Math.floor(Math.random() * themeArray.length);
-    tempTheme = themeArray[randomNum];
-
-    // 自定颜色主题：若用户启用了自定义颜色则覆盖随机结果
-    let customThemeStateStorage = localStorage.getItem("customThemeState");
-    if (customThemeStateStorage && JSON.parse(customThemeStateStorage)) {
-        let themeStorage = localStorage.getItem("theme");
-        if (themeStorage) {
-            tempTheme = JSON.parse(themeStorage);
-        }
-    }
-
-    return tempTheme;
+    return themeArray[randomNum];
 }
 
 // 根据图片背景颜色获取元素反色效果

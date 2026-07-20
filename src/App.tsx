@@ -32,12 +32,14 @@ function App() {
             svgColors: value.svgColors
         };
         setTheme(newTheme);
-        // 持久化主题色，供刷新后恢复（仅在 PoemComponent 触发换色时写入）
-        setExtensionStorage("theme", {
-            primaryColor: newTheme.primaryColor,
-            secondaryColor: newTheme.secondaryColor,
-            svgColors: newTheme.svgColors
-        });
+        // 持久化主题色供刷新后恢复；自定颜色存在 preference.customTheme，不写入此处以免取消后残留
+        if (!preference.customTheme) {
+            setExtensionStorage("theme", {
+                primaryColor: newTheme.primaryColor,
+                secondaryColor: newTheme.secondaryColor,
+                svgColors: newTheme.svgColors
+            });
+        }
     }
 
     // 仅在组件挂载时从 storage 加载偏好与主题
@@ -45,8 +47,21 @@ function App() {
         getExtensionStorage(["preference", "theme"]).then((result) => {
             const [preferenceStorage, themeStorage] = result;
             if (preferenceStorage) {
-                setPreference(fixPreference(preferenceStorage));
+                const fixedPreference = fixPreference(preferenceStorage);
+                setPreference(fixedPreference);
+                // 自定颜色优先级最高：启用时直接应用
+                if (fixedPreference.customTheme) {
+                    setTheme({
+                        primaryColor: fixedPreference.customTheme.primaryColor,
+                        secondaryColor: fixedPreference.customTheme.secondaryColor,
+                        primaryFontColor: getFontColor(fixedPreference.customTheme.primaryColor),
+                        secondaryFontColor: getFontColor(fixedPreference.customTheme.secondaryColor),
+                        svgColors: fixedPreference.customTheme.svgColors
+                    });
+                    return;
+                }
             }
+            // 否则恢复上次主题色（诗词主题模式缓存命中时保持颜色不变）
             if (themeStorage) {
                 setTheme({
                     primaryColor: themeStorage.primaryColor,

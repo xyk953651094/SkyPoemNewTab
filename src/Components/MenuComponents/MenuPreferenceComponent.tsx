@@ -29,15 +29,12 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     const themedMessage = createThemedMessage(theme, message);
 
     const [displayCustomThemeModal, setDisplayCustomThemeModal] = useState(false);
-    const [customThemeState, setCustomThemeState] = useState<boolean>(() => {
-        const stored = localStorage.getItem("customThemeState");
-        return stored ? JSON.parse(stored) : false;
-    });
-    const [customPrimaryColor, setCustomPrimaryColor] = useState<Color>(theme.primaryColor);
-    const [customSecondaryColor, setCustomSecondaryColor] = useState<Color>(theme.secondaryColor);
-    const [customSvgColor0, setCustomSvgColor0] = useState<Color>(theme.svgColors[0]);
-    const [customSvgColor1, setCustomSvgColor1] = useState<Color>(theme.svgColors[1]);
-    const [customSvgColor2, setCustomSvgColor2] = useState<Color>(theme.svgColors[2]);
+    const customThemeState = preference.customTheme !== null;
+    const [customPrimaryColor, setCustomPrimaryColor] = useState<string>(theme.primaryColor);
+    const [customSecondaryColor, setCustomSecondaryColor] = useState<string>(theme.secondaryColor);
+    const [customSvgColor0, setCustomSvgColor0] = useState<string>(theme.svgColors[0]);
+    const [customSvgColor1, setCustomSvgColor1] = useState<string>(theme.svgColors[1]);
+    const [customSvgColor2, setCustomSvgColor2] = useState<string>(theme.svgColors[2]);
 
     const [displayResetPreferenceModal, setDisplayResetPreferenceModal] = useState(false);
     const [displayClearStorageModal, setDisplayClearStorageModal] = useState(false);
@@ -64,23 +61,20 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     // 自定颜色
     function customThemeOkBtnOnClick() {
         setDisplayCustomThemeModal(false);
-        const customTheme = {
-            primaryColor: customPrimaryColor,
-            secondaryColor: customSecondaryColor,
-            svgColors: [customSvgColor0, customSvgColor1, customSvgColor2]
-        };
-        setCustomThemeState(true);
-        localStorage.setItem("customThemeState", JSON.stringify(true));
-        localStorage.setItem("theme", JSON.stringify(customTheme));
+        updatePreference({
+            customTheme: {
+                primaryColor: customPrimaryColor,
+                secondaryColor: customSecondaryColor,
+                svgColors: [customSvgColor0, customSvgColor1, customSvgColor2]
+            }
+        });
         themedMessage.success("已启用自定颜色，一秒后刷新页面");
         setTimeout(() => window.location.reload(), 1000);
     }
 
     function disableCustomThemeBtnOnClick() {
         setDisplayCustomThemeModal(false);
-        setCustomThemeState(false);
-        localStorage.setItem("customThemeState", JSON.stringify(false));
-        localStorage.removeItem("theme");
+        updatePreference({customTheme: null});
         themedMessage.success("已关闭自定颜色，一秒后刷新页面");
         setTimeout(() => window.location.reload(), 1000);
     }
@@ -89,8 +83,6 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     function resetPreferenceOkBtnOnClick() {
         setDisplayResetPreferenceModal(false);
         setExtensionStorage("preference", defaultPreference);
-        localStorage.removeItem("customThemeState");
-        localStorage.removeItem("theme");
         themedMessage.success("已重置设置，一秒后刷新页面");
         setTimeout(() => window.location.reload(), 1000);
     }
@@ -99,8 +91,6 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     function clearStorageOkBtnOnClick() {
         setDisplayClearStorageModal(false);
         clearExtensionStorage();
-        localStorage.removeItem("customThemeState");
-        localStorage.removeItem("theme");
         setExtensionStorage("preference", defaultPreference);
         themedMessage.success("已重置插件，一秒后刷新页面");
         setTimeout(() => window.location.reload(), 1000);

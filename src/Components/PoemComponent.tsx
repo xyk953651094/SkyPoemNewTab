@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Flex, Input, message, Space} from "antd";
 import {EditOutlined, RedoOutlined, StopOutlined} from "@ant-design/icons";
 import {ThemeInterface, PreferenceInterface} from "../TypeScripts/PublicInterface";
@@ -60,8 +60,14 @@ function PoemComponent(props: PoemComponentProps) {
         setPoemAuthor(truncateText(authorText, poemMaxSize));
     }
 
+    // 防止连点：请求进行中忽略新的请求（用 ref 避免极快双击的状态竞态）
+    const fetchingRef = useRef(false);
+
     // 从 API 获取诗词
     async function fetchPoem() {
+        if (fetchingRef.current) return;
+        fetchingRef.current = true;
+
         const topic = preference.poemTopic;
         const url = `https://v1.jinrishici.com/${topic}`;
 
@@ -71,7 +77,7 @@ function PoemComponent(props: PoemComponentProps) {
             await setExtensionStorage("lastPoemRequestTime", Date.now());
             await setExtensionStorage("lastPoem", result);
 
-            getTheme(setTheme());
+            getTheme(preference.customTheme ?? setTheme());
             applyPoem(result);
         } catch {
             const [lastPoem] = await getExtensionStorage(["lastPoem"]);
@@ -80,6 +86,8 @@ function PoemComponent(props: PoemComponentProps) {
             } else {
                 themedMessage.error("获取诗词失败");
             }
+        } finally {
+            fetchingRef.current = false;
         }
     }
 
@@ -103,12 +111,19 @@ function PoemComponent(props: PoemComponentProps) {
         setDisplayModal(false);
     }
 
-    function handleDisableCustomPoem() {
-        setDisplayModal(false);
+    // 清空自定诗词（状态、存储与输入框一并重置）
+    function clearCustomPoem() {
         setCustomPoem(false);
+        setCustomContentInputValue("");
+        setCustomAuthorInputValue("");
         setExtensionStorage("customPoem", false);
         setExtensionStorage("customContent", "");
         setExtensionStorage("customAuthor", "");
+    }
+
+    function handleDisableCustomPoem() {
+        setDisplayModal(false);
+        clearCustomPoem();
         themedMessage.success("已关闭自定诗词，将刷新诗词");
 
         setTimeout(() => {
@@ -122,6 +137,8 @@ function PoemComponent(props: PoemComponentProps) {
             const [customPoemStorage] = await getExtensionStorage(["customPoem"]);
             if (customPoemStorage) {
                 setCustomPoem(true);
+                // 自定诗词无网络请求，每次开标签页换一次主题色（自定颜色开启时 setTheme 结果被 customTheme 覆盖）
+                getTheme(preference.customTheme ?? setTheme());
                 const [customContent, customAuthor] = await getExtensionStorage(["customContent", "customAuthor"]);
                 if (customContent && customAuthor) {
                     setPoemContent(customContent);
@@ -161,7 +178,11 @@ function PoemComponent(props: PoemComponentProps) {
                 </FillButton>
                 <Flex gap={8}>
                     <FillButton theme={theme} icon={<RedoOutlined />} onClick={() => {
-                        getTheme(setTheme());
+                        // 启用自定诗词时点"换一首"视为放弃自定诗词，先清空再请求随机诗词
+                        if (customPoem) {
+                            clearCustomPoem();
+                            themedMessage.success("已关闭自定诗词");
+                        }
                         fetchPoem();
                     }}>
                         {"换一首"}
@@ -182,7 +203,6 @@ function PoemComponent(props: PoemComponentProps) {
             >
                 <Space orientation="vertical" style={{width: "100%"}}>
                         <Input
-                            style={{color: theme.secondaryFontColor, backgroundColor: theme.primaryColor}}
                             placeholder="请输入诗词内容"
                             value={customContentInputValue}
                             onChange={(e) => setCustomContentInputValue(e.target.value)}
@@ -191,7 +211,6 @@ function PoemComponent(props: PoemComponentProps) {
                             allowClear
                         />
                         <Input
-                            style={{color: theme.secondaryFontColor, backgroundColor: theme.primaryColor}}
                             placeholder="请输入作者信息"
                             value={customAuthorInputValue}
                             onChange={(e) => setCustomAuthorInputValue(e.target.value)}
