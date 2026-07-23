@@ -78,6 +78,7 @@ export function getObjectClassName() {
 export function setTheme() {
     let currentHour = parseInt(getTimeDetails(new Date()).hour);
     let themeArray = (currentHour > 18 || currentHour < 6) ? darkThemeArray : lightThemeArray;
+    // let themeArray = lightThemeArray;
 
     if (!themeArray || !Array.isArray(themeArray) || themeArray.length === 0) {
         throw new Error('Invalid themeArray.');
