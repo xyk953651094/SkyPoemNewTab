@@ -24,14 +24,12 @@ function normalizePoemData(raw: any) {
             content: raw.data.content,
             author: raw.data.origin.author,
             title: raw.data.origin.title,
-            dynasty: raw.data.origin.dynasty,
         };
     }
     return {
         content: raw.content,
         author: raw.author,
         title: raw.origin,
-        dynasty: "",
     };
 }
 
@@ -40,7 +38,7 @@ function PoemComponent(props: PoemComponentProps) {
 
     const [displayModal, setDisplayModal] = useState(false);
     const [poemContent, setPoemContent] = useState("海上生明月，天涯共此时。");
-    const [poemAuthor, setPoemAuthor] = useState("【张九龄】《望月怀远》");
+    const [poemAuthor, setPoemAuthor] = useState("张九龄 · <望月怀远>");
     const [customPoem, setCustomPoem] = useState(false);
     const [customContentInputValue, setCustomContentInputValue] = useState("");
     const [customAuthorInputValue, setCustomAuthorInputValue] = useState("");
@@ -52,9 +50,7 @@ function PoemComponent(props: PoemComponentProps) {
         const poem = normalizePoemData(raw);
 
         const content = truncateText(poem.content, poemMaxSize);
-        const authorText = poem.dynasty
-            ? `【${poem.dynasty} · ${poem.author}】《${poem.title}》`
-            : `【${poem.author}】《${poem.title}】`;
+        const authorText = `${poem.author} · <${poem.title.replace(/\s*·\s*/g, " · ")}>`;
 
         setPoemContent(content);
         setPoemAuthor(truncateText(authorText, poemMaxSize));
@@ -170,10 +166,14 @@ function PoemComponent(props: PoemComponentProps) {
     return (
         <>
             <Flex vertical align="center" gap={8}>
-                <FillButton theme={theme} fontSize="clamp(24px, 2vw, 42px)">
+                <FillButton theme={theme} fontSize="clamp(24px, 2vw, 42px)" onClick={() => {
+                    navigator.clipboard.writeText(poemContent).then(() => themedMessage.success("已复制到剪贴板"));
+                }}>
                     {poemContent}
                 </FillButton>
-                <FillButton theme={theme} fontSize="clamp(16px, 1.2vw, 26px)">
+                <FillButton theme={theme} fontSize="clamp(16px, 1.2vw, 26px)" onClick={() => {
+                    navigator.clipboard.writeText(poemAuthor).then(() => themedMessage.success("已复制到剪贴板"));
+                }}>
                     {poemAuthor}
                 </FillButton>
                 <Flex gap={8}>

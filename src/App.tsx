@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
-import {Col, Flex, Layout, Row, Space} from "antd";
+import {Col, ConfigProvider, Flex, Layout, Row, Space} from "antd";
+import zhCN from "antd/es/locale/zh_CN";
 import "./StyleSheets/PublicStyles.scss"
 import {getFontColor} from "./TypeScripts/PublicFunctions";
 import {getExtensionStorage, setExtensionStorage, fixPreference} from "./TypeScripts/StorageFunctions";
@@ -12,6 +13,8 @@ import FocusComponent from "./Components/FocusComponent";
 import MenuComponent from "./Components/MenuComponent";
 import SunComponent from "./Components/SunComponent";
 import WaveComponent from "./Components/WaveComponent";
+import GreetComponent from "./Components/GreetComponent";
+import WeatherComponent from "./Components/WeatherComponent";
 
 const {Header, Content, Footer} = Layout;
 
@@ -84,37 +87,41 @@ function App() {
     }, [theme.primaryColor, theme.primaryFontColor]);
 
     return (
-        <Layout>
-            <Header className={"layoutHeader"}>
-                <SunComponent theme={theme}/>
-                <Row justify={"center"}>
-                    <Col span={20} style={{textAlign: "right"}}>
-                        <Space align={"center"}>
-                            <TodoComponent theme={theme}/>
-                            <DailyComponent theme={theme}/>
-                            <FocusComponent theme={theme}/>
-                            <MenuComponent
-                                theme={theme}
-                                preference={preference}
-                                getPreference={setPreference}
-                            />
-                        </Space>
-                    </Col>
-                </Row>
-            </Header>
-            <Content className={"layoutContent"}>
-                <Flex justify="center" align="center" style={{height: "100%"}}>
-                    <PoemComponent
-                        theme={theme}
-                        preference={preference}
-                        getTheme={getTheme}
-                    />
-                </Flex>
-            </Content>
-            <Footer className={"layoutFooter"}>
-                <WaveComponent theme={theme}/>
-            </Footer>
-        </Layout>
+        <ConfigProvider locale={zhCN} theme={{token: {fontFamily: preference.fontFamily}}}>
+            <Layout>
+                <Header className={"layoutHeader"}>
+                    <SunComponent theme={theme}/>
+                    <Row justify={"center"}>
+                        <Col span={20} style={{textAlign: "right"}}>
+                            <Space align={"center"}>
+                                <GreetComponent theme={theme}/>
+                                <WeatherComponent theme={theme}/>
+                                <TodoComponent theme={theme}/>
+                                <DailyComponent theme={theme}/>
+                                <FocusComponent theme={theme}/>
+                                <MenuComponent
+                                    theme={theme}
+                                    preference={preference}
+                                    getPreference={setPreference}
+                                />
+                            </Space>
+                        </Col>
+                    </Row>
+                </Header>
+                <Content className={"layoutContent"}>
+                    <Flex justify="center" align="center" style={{height: "100%"}}>
+                        <PoemComponent
+                            theme={theme}
+                            preference={preference}
+                            getTheme={getTheme}
+                        />
+                    </Flex>
+                </Content>
+                <Footer className={"layoutFooter"}>
+                    <WaveComponent theme={theme}/>
+                </Footer>
+            </Layout>
+        </ConfigProvider>
     );
 }
 

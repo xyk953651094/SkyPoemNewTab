@@ -14,7 +14,7 @@ export interface CustomThemeInterface {
 
 export interface PreferenceInterface {
     poemTopic: string,
-    fontFamily: "cursive" | "sansSerif",
+    fontFamily: "cursive" | "sans-serif",
     customTheme: CustomThemeInterface | null
 }
 

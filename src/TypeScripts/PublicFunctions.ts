@@ -73,18 +73,17 @@ export function getObjectClassName() {
     return chinaObject[index];
 }
 
-// 设置颜色主题：从明/暗色板中随机选取（夜间 18:00–06:00 使用深色背景）
+// 设置颜色主题：跟随系统深色模式偏好，从对应色板中随机选取
 // 纯随机函数，不读取任何存储；自定颜色由调用方通过 preference.customTheme ?? setTheme() 决策
 export function setTheme() {
-    let currentHour = parseInt(getTimeDetails(new Date()).hour);
-    let themeArray = (currentHour > 18 || currentHour < 6) ? darkThemeArray : lightThemeArray;
-    // let themeArray = lightThemeArray;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const themeArray = prefersDark ? darkThemeArray : lightThemeArray;
 
     if (!themeArray || !Array.isArray(themeArray) || themeArray.length === 0) {
         throw new Error('Invalid themeArray.');
     }
 
-    let randomNum = Math.floor(Math.random() * themeArray.length);
+    const randomNum = Math.floor(Math.random() * themeArray.length);
     return themeArray[randomNum];
 }
 

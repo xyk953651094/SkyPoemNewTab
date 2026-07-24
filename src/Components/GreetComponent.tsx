@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Flex, Popover, Row, Typography} from "antd";
+import {Button, Col, Popover, Row, Space, Typography} from "antd";
 import {CalendarOutlined, CheckCircleOutlined, CloseCircleOutlined, MoreOutlined} from "@ant-design/icons";
 import {getTimeDetails, truncateText} from "../TypeScripts/PublicFunctions";
 import {ThemeInterface} from "../TypeScripts/PublicInterface";
@@ -16,10 +16,10 @@ const STORAGE_KEY_REQUEST_DATE = "lastHolidayRequestDate";
 const STORAGE_KEY_HOLIDAY = "lastHoliday";
 
 // 宜忌最大显示长度
-const MAX_TEXT_SIZE = 80;
+const MAX_TEXT_SIZE = 50;
 
 // 万年历链接
-const CALENDAR_URL = "https://wannianrili.bmcx.com/";
+const CALENDAR_URL = "https://www.bing.com/search?q=万年历";
 
 interface HolidayData {
     solarTerms: string;
@@ -138,7 +138,7 @@ function GreetComponent(props: GreetComponentProps) {
     );
 
     const popoverContent = (
-        <Flex vertical gap={"small"}>
+        <Space orientation={"vertical"}>
             <HoverButton theme={props.theme} icon={<CalendarOutlined/>}>
                 {calendar}
             </HoverButton>
@@ -148,14 +148,14 @@ function GreetComponent(props: GreetComponentProps) {
             <HoverButton theme={props.theme} icon={<CloseCircleOutlined/>}>
                 {"忌：" + truncateText(avoid, MAX_TEXT_SIZE)}
             </HoverButton>
-        </Flex>
+        </Space>
     );
 
     return (
         <Popover
             title={popoverTitle}
             content={popoverContent}
-            placement={"bottomLeft"}
+            placement={"bottomRight"}
             color={props.theme.secondaryColor}
             styles={{root: {minWidth: "600px"}}}
         >

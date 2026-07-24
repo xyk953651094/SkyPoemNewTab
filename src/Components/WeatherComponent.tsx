@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Col, Flex, Popover, Row, Typography} from "antd";
-import {ClockCircleOutlined, EnvironmentOutlined, MoreOutlined} from "@ant-design/icons";
+import {EnvironmentOutlined, MoreOutlined} from "@ant-design/icons";
 import {getTimeDetails} from "../TypeScripts/PublicFunctions";
 import {ThemeInterface} from "../TypeScripts/PublicInterface";
 import {getExtensionStorage, setExtensionStorage} from "../TypeScripts/StorageFunctions";
@@ -21,7 +21,7 @@ const CACHE_INTERVAL = 60 * 60 * 1000;
 const WEATHER_API_URL = "https://v2.jinrishici.com/info";
 
 // 天气详情链接
-const WEATHER_URL = "https://www.weather.com.cn/";
+const WEATHER_URL = "https://www.bing.com/search?q=天气";
 
 // 缺省占位文本
 const PLACEHOLDER = "暂无信息";
@@ -166,12 +166,12 @@ function WeatherComponent(props: WeatherComponentProps) {
 
     const popoverTitle = (
         <Row align={"middle"}>
-            <Col span={8}>
+            <Col span={16}>
                 <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
-                    {"天气信息"}
+                    {"天气信息（上次更新：" + weather.lastRequestTime + "）"}
                 </Text>
             </Col>
-            <Col span={16} style={{textAlign: "right"}}>
+            <Col span={8} style={{textAlign: "right"}}>
                 <HoverButton theme={props.theme} icon={<MoreOutlined/>} href={WEATHER_URL} target={"_self"}>
                     {"更多信息"}
                 </HoverButton>
@@ -217,9 +217,6 @@ function WeatherComponent(props: WeatherComponentProps) {
                     </HoverButton>
                 </Col>
             </Row>
-            <HoverButton theme={props.theme} icon={<ClockCircleOutlined/>}>
-                {"上次更新：" + weather.lastRequestTime}
-            </HoverButton>
         </Flex>
     );
 
@@ -227,7 +224,7 @@ function WeatherComponent(props: WeatherComponentProps) {
         <Popover
             title={popoverTitle}
             content={popoverContent}
-            placement={"bottomLeft"}
+            placement={"bottomRight"}
             color={props.theme.secondaryColor}
             styles={{root: {minWidth: "600px"}}}
         >

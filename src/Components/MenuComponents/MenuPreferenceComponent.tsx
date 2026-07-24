@@ -131,7 +131,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                                              style: {color: props.theme.secondaryFontColor}
                                          },
                                          {
-                                             value: "sansSerif",
+                                             value: "sans-serif",
                                              label: "无衬线",
                                              style: {color: props.theme.secondaryFontColor}
                                          }

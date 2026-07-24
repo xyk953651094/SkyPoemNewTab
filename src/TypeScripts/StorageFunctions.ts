@@ -115,6 +115,12 @@ export function fixPreference(preference: PreferenceInterface): PreferenceInterf
         }
     }
 
+    // 旧版 fontFamily 值 "sansSerif"（驼峰）已改为 "sans-serif"（CSS 合法值）
+    if ((preference as any).fontFamily === "sansSerif") {
+        (preference as any).fontFamily = "sans-serif";
+        isFixed = true;
+    }
+
     if (isFixed) {
         setExtensionStorage("preference", preference);
     }
