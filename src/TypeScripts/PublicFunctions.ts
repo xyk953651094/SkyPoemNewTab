@@ -184,13 +184,12 @@ export function createThemedMessage(theme: ThemeInterface, message: any) {
         error: (content: string) => apply("error", content),
         info: (content: string) => apply("info", content),
         warning: (content: string) => apply("warning", content),
-        loading: (content: string) => apply("loading", content),
-        // loading: (config: any) => {
-        //     const normalized = typeof config === "string" ? {content: config} : config;
-        //     return isEmpty(theme) ? message.loading(normalized) : message.loading({
-        //         ...normalized,
-        //         styles: themedStyles
-        //     });
-        // },
+        loading: (config: any) => {
+            const normalized = typeof config === "string" ? {content: config} : config;
+            return isEmpty(theme) ? message.loading(normalized) : message.loading({
+                ...normalized,
+                styles: themedStyles
+            });
+        },
     };
 }

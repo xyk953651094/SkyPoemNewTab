@@ -32,17 +32,14 @@ export const poemTopics = [
 
 // 主题颜色
 export const lightThemeArray: ({ primaryColor: string; secondaryColor: string; svgColors: string[]; }[]) = [
-    // 好
     {
         'primaryColor': '#A29192', 'secondaryColor': '#444C5E',
         'svgColors': ['#918087', '#7D707D', '#656173']
     },
-    // 好
     {
         'primaryColor': '#AFDDE0', 'secondaryColor': '#565F9A',
         'svgColors': ['#94C3D7', '#89A6C9', '#8B87B2']
     },
-    // 好
     {
         'primaryColor': '#B0B298', 'secondaryColor': '#475C4E',
         'svgColors': ['#8C9E89', '#6B8A7D', '#507473']
@@ -52,62 +49,50 @@ export const lightThemeArray: ({ primaryColor: string; secondaryColor: string; s
         'primaryColor': '#C9DD22', 'secondaryColor': '#2F2F35',
         'svgColors': ['#66C958', '#00AD7C', '#008C89']
     },
-    // 好
     {
         'primaryColor': '#CCD0CF', 'secondaryColor': '#06141B',
         'svgColors': ['#11212D', '#253745', '#4A5C6A']
     },
-    // 好
     {
         'primaryColor': '#D1B894', 'secondaryColor': '#804145',
         'svgColors': ['#A0A681', '#739178', '#4F7A72']
     },
-    // 好
     {
         'primaryColor': '#D6D6D4', 'secondaryColor': '#2F4644',
         'svgColors': ['#9EB6B3', '#808E8C', '#46746F']
     },
-    // 好
     {
         'primaryColor': '#E2E1E4', 'secondaryColor': '#74759B',
         'svgColors': ['#C3C6CE', '#9FACB7', '#7A959D']
     },
-    // 好
     {
         'primaryColor': '#EEF7F2', 'secondaryColor': '#114E7A',
         'svgColors': ['#C3D2CE', '#99AEAE', '#728B90']
     },
-    // 好
     {
         'primaryColor': '#EFDFDF', 'secondaryColor': '#795A5F',
         'svgColors': ['#CEBCC2', '#AA9CA8', '#827E8F']
     },
-    // 好
     {
         'primaryColor': '#F2E6CE', 'secondaryColor': '#6E8B74',
         'svgColors': ['#C0C7AF', '#90A897', '#668883']
     },
-    // 好
     {
         'primaryColor': '#F2EBD9', 'secondaryColor': '#66363C',
         'svgColors': ['#C3CAB7', '#94AA9C', '#6A8985']
     },
-    // 好
     {
         'primaryColor': '#F6DCCE', 'secondaryColor': '#815C94',
         'svgColors': ['#D8B8B7', '#B397A3', '#897B8F']
     },
-    // 好
     {
         'primaryColor': '#F7CBCA', 'secondaryColor': '#5D6B6B',
         'svgColors': ['#DEE7E8', '#DFD9D6', '#C8DBDE']
     },
-    // 好
     {
         'primaryColor': '#FADCD5', 'secondaryColor': '#765D67',
         'svgColors': ['#6D3C52', '#4B2138', '#2D222F']
     },
-    // 好
     {
         'primaryColor': '#FBE4DB', 'secondaryColor': '#190019',
         'svgColors': ['#DFB6B2', '#554F6C', '#522B5B']
@@ -115,92 +100,30 @@ export const lightThemeArray: ({ primaryColor: string; secondaryColor: string; s
 ];
 
 export const darkThemeArray: ({ primaryColor: string; secondaryColor: string; svgColors: string[]; }[]) = [
-    // 一般
-    {
-        'primaryColor': '#06141B', 'secondaryColor': '#CCD0CF',
-        'svgColors': ['#4A5C6A', '#253745', '#11212D']
-    },
-    // 一般
-    {
-        'primaryColor': '#0D0831', 'secondaryColor': '#9B9690',
-        'svgColors': ['#DA6F58', '#A03E5B', '#58204F',]
-    },
-    // 好
     {
         'primaryColor': '#114E7A', 'secondaryColor': '#EEF7F2',
         'svgColors': ['#00C298', '#009DA5', '#00759B',]
     },
-    // 一般
-    {
-        'primaryColor': '#190019', 'secondaryColor': '#FBE4DB',
-        'svgColors': ['#2B124C', '#522B5B', '#554F5C']
-    },
-    // 好（但是和 112差不多）
     {
         'primaryColor': '#1A4D80', 'secondaryColor': '#FEFCF6',
         'svgColors': ['#E6C380', '#67A1C4', '#3070A4']
     },
-    // 好
     {
         'primaryColor': '#2F2F35', 'secondaryColor': '#C9DD22',
         'svgColors': ['#E18575', '#A56477', '#614B61',]
     },
-    // 好
     {
         'primaryColor': '#2F4644', 'secondaryColor': '#D6D6D4',
         'svgColors': ['#9EB6B3', '#808E8C', '#46746F']
     },
-    // 一般
-    {
-        'primaryColor': '#444C5E', 'secondaryColor': '#A29192',
-        'svgColors': ['#34C0A1', '#0099A4', '#38718B']
-    },
-    // 一般
-    {
-        'primaryColor': '#475C4E', 'secondaryColor': '#B0B298',
-        'svgColors': ['#4A8884', '#4A796F', '#4A6A5D']
-    },
-    // 一般
-    {
-        'primaryColor': '#565F9A', 'secondaryColor': '#AFDDE0',
-        'svgColors': ['#9F66AB', '#8664A8', '#6E62A2']
-    },
-    // 一般
-    {
-        'primaryColor': '#5A636A', 'secondaryColor': '#0D1F23',
-        'svgColors': ['#69818D', '#2D4A53', '#132E35']
-    },
-    // 好
     {
         'primaryColor': '#66363C', 'secondaryColor': '#F2EBD9',
         'svgColors': ['#DC9A55', '#BC7350', '#935149']
     },
-    // 一般
-    {
-        'primaryColor': '#6DA5C0', 'secondaryColor': '#05161A',
-        'svgColors': ['#49B2B8', '#348A91', '#294D61']
-    },
-    // 一般
-    {
-        'primaryColor': '#6E8B74', 'secondaryColor': '#F2E6CE',
-        'svgColors': ['#597F71', '#47726E', '#3A6469']
-    },
-    // 一般
-    {
-        'primaryColor': '#795A5F', 'secondaryColor': '#EFDFDF',
-        'svgColors': ['#7A7E57', '#856F52', '#856358']
-    },
-    // 一般
-    {
-        'primaryColor': '#804145', 'secondaryColor': '#D1B894',
-        'svgColors': ['#6B8746', '#826E33', '#895537']
-    },
-    // 好
     {
         'primaryColor': '#815C94', 'secondaryColor': '#F6DCCE',
         'svgColors': ['#FF9C75', '#EF7A89', '#BE6796']
     },
-    // 好
     {
         'primaryColor': '#9B9690', 'secondaryColor': '#0D0831',
         'svgColors': ['#526964', '#3C595F', '#2F4858',]

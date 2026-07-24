@@ -34,15 +34,21 @@ export async function httpRequest<T = any>(
         throw new HttpRequestError("Invalid URL");
     }
     
-    // 构建请求配置（GET 请求无 body，不设 Content-Type 以避免触发 CORS preflight）
+    // 构建请求配置
+    // 注意：仅非 GET 请求（带 JSON body）才设置 Content-Type: application/json。
+    // 给无 body 的 GET 加该头会触发 CORS 预检（application/json 非安全列表值），
+    // 部分接口（如 jinrishici.com）的预检返回 403 导致请求失败。
+    const isGet = method === "GET";
     const config: RequestInit = {
         method,
-        headers: method === "GET" ? {...headers} : {"Content-Type": "application/json", ...headers},
+        headers: isGet
+            ? {...headers}
+            : {"Content-Type": "application/json", ...headers},
     };
     
     // 处理 URL 和 body
     let requestUrl = url;
-    if (method === "GET") {
+    if (isGet) {
         // 过滤掉 undefined 和 null，但保留 false/0/"" 作为有意义的值
         const params = new URLSearchParams();
         for (const [key, value] of Object.entries(data)) {
