@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Flex, Input, message, Space} from "antd";
-import {EditOutlined, RedoOutlined, StopOutlined} from "@ant-design/icons";
+import {EditOutlined, ReloadOutlined, StopOutlined} from "@ant-design/icons";
 import {ThemeInterface, PreferenceInterface} from "../TypeScripts/PublicInterface";
 import {setTheme, createThemedMessage, truncateText} from "../TypeScripts/PublicFunctions";
 import {getExtensionStorage, setExtensionStorage} from "../TypeScripts/StorageFunctions";
@@ -10,6 +10,7 @@ import {FillButton, HoverButton} from "./PublicComponents/PublicButton";
 import {PublicModal} from "./PublicComponents/PublicModal";
 
 const poemMaxSize = 30;
+const manualRefreshCooldown = 300000; // 手动换一首冷却时间：5 分钟
 
 interface PoemComponentProps {
     theme: ThemeInterface;
@@ -95,8 +96,8 @@ function PoemComponent(props: PoemComponentProps) {
             setPoemContent(customContentInputValue);
             setPoemAuthor(customAuthorInputValue);
             setExtensionStorage("customPoem", true);
-            setExtensionStorage("customContent", customContentInputValue);
-            setExtensionStorage("customAuthor", customAuthorInputValue);
+            setExtensionStorage("customPoemContent", customContentInputValue);
+            setExtensionStorage("customPoemAuthor", customAuthorInputValue);
             themedMessage.success("已使用自定诗词");
         } else {
             themedMessage.error("表单不能为空");
@@ -113,8 +114,8 @@ function PoemComponent(props: PoemComponentProps) {
         setCustomContentInputValue("");
         setCustomAuthorInputValue("");
         setExtensionStorage("customPoem", false);
-        setExtensionStorage("customContent", "");
-        setExtensionStorage("customAuthor", "");
+        setExtensionStorage("customPoemContent", "");
+        setExtensionStorage("customPoemAuthor", "");
     }
 
     function handleDisableCustomPoem() {
@@ -135,7 +136,7 @@ function PoemComponent(props: PoemComponentProps) {
                 setCustomPoem(true);
                 // 自定诗词无网络请求，每次开标签页换一次主题色（自定颜色开启时 setTheme 结果被 customTheme 覆盖）
                 getTheme(preference.customTheme ?? setTheme());
-                const [customContent, customAuthor] = await getExtensionStorage(["customContent", "customAuthor"]);
+                const [customContent, customAuthor] = await getExtensionStorage(["customPoemContent", "customPoemAuthor"]);
                 if (customContent && customAuthor) {
                     setPoemContent(customContent);
                     setPoemAuthor(customAuthor);
@@ -177,7 +178,13 @@ function PoemComponent(props: PoemComponentProps) {
                     {poemAuthor}
                 </FillButton>
                 <Flex gap={8}>
-                    <FillButton theme={theme} icon={<RedoOutlined />} onClick={() => {
+                    <FillButton theme={theme} icon={<ReloadOutlined />} onClick={async () => {
+                        // 冷却检查：防止频繁请求导致 API 降低诗词质量
+                        const [lastRequestTime] = await getExtensionStorage(["lastPoemRequestTime"]);
+                        if (lastRequestTime && Date.now() - lastRequestTime < manualRefreshCooldown) {
+                            themedMessage.error("操作过于频繁，请稍后再试");
+                            return;
+                        }
                         // 启用自定诗词时点"换一首"视为放弃自定诗词，先清空再请求随机诗词
                         if (customPoem) {
                             clearCustomPoem();

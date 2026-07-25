@@ -25,7 +25,6 @@ const {Text} = Typography;
 
 // 存储 key 常量
 const STORAGE_KEY_FOCUS_MODE = "focusMode";
-const STORAGE_KEY_FOCUS_SOUND = "focusSound";
 
 interface FocusComponentProps {
     theme: ThemeInterface;
@@ -92,7 +91,6 @@ function FocusComponent(props: FocusComponentProps) {
     // 切换白噪音
     function focusSoundSelectOnChange(value: string) {
         setFocusSound(value);
-        setExtensionStorage(STORAGE_KEY_FOCUS_SOUND, value);
         
         if (!focusMode) return;
         

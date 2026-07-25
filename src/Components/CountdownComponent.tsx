@@ -26,7 +26,7 @@ const {Text} = Typography;
 const DAILY_MAX_SIZE = 5;
 
 // 存储 key 常量
-const STORAGE_KEY_DAILY = "daily";
+const STORAGE_KEY_COUNTDOWNS = "countDowns";
 
 // 毫秒常量
 const MS_PER_DAY = 86400000;
@@ -52,9 +52,9 @@ function CountdownComponent(props: DailyComponentProps) {
     // 持久化倒数日列表
     async function saveDailyList(list: DailyItem[]) {
         if (list.length === 0) {
-            await removeExtensionStorage(STORAGE_KEY_DAILY);
+            await removeExtensionStorage(STORAGE_KEY_COUNTDOWNS);
         } else {
-            await setExtensionStorage(STORAGE_KEY_DAILY, list);
+            await setExtensionStorage(STORAGE_KEY_COUNTDOWNS, list);
         }
     }
 
@@ -144,7 +144,7 @@ function CountdownComponent(props: DailyComponentProps) {
     // 初始化：从 storage 读取数据
     useEffect(() => {
         async function loadFromStorage() {
-            const [storedDaily] = await getExtensionStorage([STORAGE_KEY_DAILY]);
+            const [storedDaily] = await getExtensionStorage([STORAGE_KEY_COUNTDOWNS]);
             const parsedDaily: DailyItem[] = storedDaily ?? [];
             setDailyList(parsedDaily);
         }
