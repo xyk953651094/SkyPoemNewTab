@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Card, ColorPicker, Form, message, Radio, RadioChangeEvent, Row, Space, Typography} from "antd";
+import {Card, ColorPicker, Divider, Form, message, Radio, RadioChangeEvent, Row, Select, Space, Typography} from "antd";
 import {BgColorsOutlined, RedoOutlined, SettingOutlined, StopOutlined} from "@ant-design/icons";
 import type {ColorPickerProps, GetProp} from "antd";
 import {ThemeInterface, PreferenceInterface} from "../../TypeScripts/PublicInterface";
@@ -47,8 +47,8 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     }
 
     // 诗词主题
-    function poemTopicsRadioOnChange(event: RadioChangeEvent) {
-        updatePreference({poemTopic: event.target.value});
+    function poemTopicSelectOnChange(value: string) {
+        updatePreference({poemTopic: value});
         themedMessage.success("已更换诗词主题，下次刷新诗词时生效");
     }
 
@@ -106,22 +106,21 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                       header: {color: theme.secondaryFontColor, borderColor: theme.secondaryFontColor},
                       extra: {color: theme.secondaryFontColor}
                   }}>
-                <Form colon={false}>
+                <Form layout={"vertical"}>
                     <Form.Item label={<Text style={labelStyle}>{"诗词主题"}</Text>}
                                extra={<Text style={labelStyle}>{"下次刷新诗词时生效"}</Text>}>
-                        <Radio.Group buttonStyle={"solid"}
-                                     style={{width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", rowGap: 8}}
-                                     value={preference.poemTopic}
-                                     onChange={poemTopicsRadioOnChange}
-                                     options={poemTopics.map((topic) => ({
-                                         label: poemTopicLabels[topic],
-                                         value: topic,
-                                         style: {color: props.theme.secondaryFontColor}
-                                     }))}
+                        <Select
+                            style={{width: "100%"}}
+                            value={preference.poemTopic}
+                            onChange={poemTopicSelectOnChange}
+                            options={poemTopics.map((topic) => ({
+                                label: poemTopicLabels[topic],
+                                value: topic,
+                            }))}
                         />
                     </Form.Item>
                     <Form.Item label={<Text style={labelStyle}>{"字体类型"}</Text>}>
-                        <Radio.Group buttonStyle={"solid"} style={{width: "100%"}}
+                        <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
                                      value={preference.fontFamily}
                                      onChange={fontFamilyRadioOnChange}
                                      options={[
@@ -145,6 +144,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             {"自定义插件主题颜色"}
                         </HoverButton>
                     </Form.Item>
+                    <Divider style={{borderColor: props.theme.secondaryFontColor}}/>
                     <Form.Item label={<Text style={labelStyle}>{"危险设置"}</Text>}
                                extra={<Text style={labelStyle}>{"出现异常时可尝试重置设置或插件"}</Text>}>
                         <Space>
