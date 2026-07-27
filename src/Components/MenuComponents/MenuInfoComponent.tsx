@@ -15,13 +15,13 @@ interface LinkItem {
 const links: LinkItem[] = [
     {
         label: "产品主页",
-        github: "https://github.com/xyk953651094/SkyImageNewTab/",
-        gitlab: "https://gitlab.com/xyk953651094/SkyImageNewTab/",
+        github: "https://github.com/xyk953651094/SkyPoemNewTab/",
+        gitlab: "https://gitlab.com/xyk953651094/SkyPoemNewTab/",
     },
     {
         label: "更新日志",
-        github: "https://github.com/xyk953651094/SkyImageNewTab/releases/",
-        gitlab: "https://gitlab.com/xyk953651094/SkyImageNewTab/-/releases/",
+        github: "https://github.com/xyk953651094/SkyPoemNewTab/releases/",
+        gitlab: "https://gitlab.com/xyk953651094/SkyPoemNewTab/-/releases/",
     },
     {
         label: "帮助文档",

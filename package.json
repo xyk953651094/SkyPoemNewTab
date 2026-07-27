@@ -1,5 +1,5 @@
 {
-    "name": "skyimagenewtab",
+    "name": "skypoemnewtab",
     "version": "1.0.0",
     "private": true,
     "dependencies": {
@@ -7,6 +7,7 @@
         "@types/react-dom": "^19.1.6",
         "antd": "^6.5.0",
         "bootstrap-icons": "^1.13.1",
+        "dotenv": "^17.4.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-scripts": "5.0.1"

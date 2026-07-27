@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const webpack = require('webpack');
 module.exports = (env, argv) => ({
     optimization: {
         splitChunks: {
@@ -69,6 +69,9 @@ module.exports = (env, argv) => ({
         ]
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(argv.mode || 'production'),
+        }),
         new HtmlWebpackPlugin({
             title: '云开诗词新标签页',
             filename: 'mainPage.html',

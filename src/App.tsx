@@ -13,8 +13,8 @@ import FocusComponent from "./Components/FocusComponent";
 import MenuComponent from "./Components/MenuComponent";
 import SunComponent from "./Components/SunComponent";
 import WaveComponent from "./Components/WaveComponent";
-import GreetComponent from "./Components/GreetComponent";
-import WeatherComponent from "./Components/WeatherComponent";
+// import GreetComponent from "./Components/GreetComponent";
+// import WeatherComponent from "./Components/WeatherComponent";
 
 const {Header, Content, Footer} = Layout;
 
@@ -94,8 +94,8 @@ function App() {
                     <Row justify={"center"}>
                         <Col span={20} style={{textAlign: "right"}}>
                             <Space align={"center"}>
-                                <GreetComponent theme={theme}/>
-                                <WeatherComponent theme={theme}/>
+                                {/*<GreetComponent theme={theme}/>*/}
+                                {/*<WeatherComponent theme={theme}/>*/}
                                 <TodoComponent theme={theme}/>
                                 <DailyComponent theme={theme}/>
                                 <FocusComponent theme={theme}/>
