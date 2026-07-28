@@ -1,0 +1,51 @@
+.waveDiv {
+    width: 100%;
+    height: clamp(80px, 12vh, 200px);
+}
+
+.waveDiv .waveSvg {
+    width: 100%;
+    height: clamp(80px, 12vh, 200px);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.waveSvg .wave {
+    animation: move 3s linear infinite;
+    will-change: transform;
+}
+
+.waveSvg .wave:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 27s;
+}
+
+.waveSvg .wave:nth-child(2) {
+    animation-delay: -4s;
+    animation-duration: 18s;
+}
+
+.waveSvg .wave:nth-child(3) {
+    animation-delay: -6s;
+    animation-duration: 9s;
+}
+
+@keyframes move {
+    0% {
+        transform: translate(-90px, 0);
+    }
+    50% {
+        transform: translate(-2px, -2px);
+    }
+    100% {
+        transform: translate(85px, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .waveSvg .wave {
+        animation: none;
+    }
+}
