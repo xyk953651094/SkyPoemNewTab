@@ -10,7 +10,7 @@ import {FillButton, HoverButton} from "./PublicComponents/PublicButton";
 import {PublicModal} from "./PublicComponents/PublicModal";
 
 const poemMaxSize = 30;
-const manualRefreshCooldown = 300000; // 手动换一首冷却时间：5 分钟
+const manualRefreshCooldown = 0; // 5 * 60 * 1000
 
 interface PoemComponentProps {
     theme: ThemeInterface;
