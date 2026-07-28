@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Flex, Input, message, Space} from "antd";
+import {Flex, Input, message, Space, Tag} from "antd";
 import {EditOutlined, ReloadOutlined, StopOutlined} from "@ant-design/icons";
 import {ThemeInterface, PreferenceInterface} from "../TypeScripts/PublicInterface";
 import {setTheme, createThemedMessage, truncateText} from "../TypeScripts/PublicFunctions";
@@ -11,6 +11,7 @@ import {PublicModal} from "./PublicComponents/PublicModal";
 
 const poemMaxSize = 30;
 const manualRefreshCooldown = 0; // 5 * 60 * 1000
+const STORAGE_KEY_JINRISHICI_TOKEN = "jinrishiciToken";
 
 interface PoemComponentProps {
     theme: ThemeInterface;
@@ -25,12 +26,14 @@ function normalizePoemData(raw: any) {
             content: raw.data.content,
             author: raw.data.origin.author,
             title: raw.data.origin.title,
+            dynasty: raw.data.origin.dynasty || "",
         };
     }
     return {
         content: raw.content,
         author: raw.author,
         title: raw.origin,
+        dynasty: "",
     };
 }
 
@@ -40,6 +43,7 @@ function PoemComponent(props: PoemComponentProps) {
     const [displayModal, setDisplayModal] = useState(false);
     const [poemContent, setPoemContent] = useState("海上生明月，天涯共此时。");
     const [poemAuthor, setPoemAuthor] = useState("张九龄 · <望月怀远>");
+    const [matchTags, setMatchTags] = useState<string[]>([]);
     const [customPoem, setCustomPoem] = useState(false);
     const [customContentInputValue, setCustomContentInputValue] = useState("");
     const [customAuthorInputValue, setCustomAuthorInputValue] = useState("");
@@ -51,25 +55,51 @@ function PoemComponent(props: PoemComponentProps) {
         const poem = normalizePoemData(raw);
 
         const content = truncateText(poem.content, poemMaxSize);
-        const authorText = `${poem.author} · <${poem.title.replace(/\s*·\s*/g, " · ")}>`;
+        const titleFormatted = poem.title.replace(/\s*·\s*/g, " · ");
+        const authorText = poem.dynasty
+            ? `${poem.dynasty} · ${poem.author} · <${titleFormatted}>`
+            : `${poem.author} · <${titleFormatted}>`;
 
         setPoemContent(content);
         setPoemAuthor(truncateText(authorText, poemMaxSize));
+        setMatchTags(raw?.data?.matchTags ?? []);
     }
 
     // 防止连点：请求进行中忽略新的请求（用 ref 避免极快双击的状态竞态）
     const fetchingRef = useRef(false);
 
-    // 从 API 获取诗词
+    // 获取今日诗词 API Token（首次获取后永久缓存）
+    async function getJinrishiciToken(): Promise<string> {
+        const [storedToken] = await getExtensionStorage([STORAGE_KEY_JINRISHICI_TOKEN]);
+        if (storedToken) return storedToken;
+
+        const tokenResult = await httpRequest("https://v2.jinrishici.com/token");
+        const token: string = tokenResult.data;
+        await setExtensionStorage(STORAGE_KEY_JINRISHICI_TOKEN, token);
+        return token;
+    }
+
+    // 从 API 获取诗词（根据 poemSource 选择智能/预设接口）
     async function fetchPoem() {
         if (fetchingRef.current) return;
         fetchingRef.current = true;
 
-        const topic = preference.poemTopic;
-        const url = `https://v1.jinrishici.com/${topic}`;
-
         try {
-            const result = await httpRequest(url);
+            let result;
+            if (preference.poemSource === "smart") {
+                try {
+                    const token = await getJinrishiciToken();
+                    result = await httpRequest("https://v2.jinrishici.com/sentence", {
+                        headers: {"X-User-Token": token}
+                    });
+                } catch (v2Error) {
+                    // v2 失败时回退到 v1（开发环境 CORS 不支持自定义 header 的预检）
+                    console.warn("v2 API 请求失败，回退到 v1:", v2Error);
+                    result = await httpRequest(`https://v1.jinrishici.com/${preference.poemTopic}`);
+                }
+            } else {
+                result = await httpRequest(`https://v1.jinrishici.com/${preference.poemTopic}`);
+            }
 
             await setExtensionStorage("lastPoemRequestTime", Date.now());
             await setExtensionStorage("lastPoem", result);
@@ -95,6 +125,7 @@ function PoemComponent(props: PoemComponentProps) {
             setCustomPoem(true);
             setPoemContent(customContentInputValue);
             setPoemAuthor(customAuthorInputValue);
+            setMatchTags([]);
             setExtensionStorage("customPoem", true);
             setExtensionStorage("customPoemContent", customContentInputValue);
             setExtensionStorage("customPoemAuthor", customAuthorInputValue);
@@ -162,11 +193,25 @@ function PoemComponent(props: PoemComponentProps) {
         }
 
         init();
-    }, [preference.poemTopic]);
+    }, [preference.poemTopic, preference.poemSource]);
 
     return (
         <>
             <Flex vertical align="center" gap={8}>
+                {preference.poemSource === "smart" && matchTags.length > 0 && (
+                    <Flex gap={4} wrap="wrap" justify="center">
+                        {matchTags.map((tag, index) => (
+                            <Tag key={index} style={{
+                                color: theme.secondaryColor,
+                                borderColor: theme.secondaryColor,
+                                backgroundColor: "transparent",
+                                fontSize: "clamp(12px, 0.8vw, 18px)"
+                            }}>
+                                {tag}
+                            </Tag>
+                        ))}
+                    </Flex>
+                )}
                 <FillButton theme={theme} fontSize="clamp(24px, 2vw, 42px)" onClick={() => {
                     navigator.clipboard.writeText(poemContent).then(() => themedMessage.success("已复制到剪贴板"));
                 }}>

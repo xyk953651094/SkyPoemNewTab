@@ -52,6 +52,14 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
         setExtensionStorage("preference", newPreference);
     }
 
+    // 诗词来源
+    function poemSourceRadioOnChange(event: RadioChangeEvent) {
+        updatePreference({poemSource: event.target.value});
+        themedMessage.success(event.target.value === "smart"
+            ? "已切换到智能主题，下次刷新诗词时生效"
+            : "已切换到预设主题，下次刷新诗词时生效");
+    }
+
     // 诗词主题
     function poemTopicSelectOnChange(value: string) {
         updatePreference({poemTopic: value});
@@ -145,16 +153,27 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                           extra: {color: props.theme.secondaryFontColor}
                       }}>
                     <Form.Item label={"诗词主题"} extra={"下次刷新诗词时生效"}>
-                        <Select
-                            style={{width: "100%"}}
-                            value={preference.poemTopic}
-                            onChange={poemTopicSelectOnChange}
-                            options={poemTopics.map((topic) => ({
-                                label: poemTopicLabels[topic],
-                                value: topic,
-                            }))}
-                        />
+                        <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
+                                     value={preference.poemSource}
+                                     onChange={poemSourceRadioOnChange}
+                                     options={[
+                                         {value: "smart", label: "智能主题", style: {color: theme.secondaryFontColor}},
+                                         {value: "preset", label: "预设主题", style: {color: theme.secondaryFontColor}}
+                                     ]}/>
                     </Form.Item>
+                    {preference.poemSource === "preset" && (
+                        <Form.Item label={"预设主题"} extra={"下次刷新诗词时生效"}>
+                            <Select
+                                style={{width: "100%"}}
+                                value={preference.poemTopic}
+                                onChange={poemTopicSelectOnChange}
+                                options={poemTopics.map((topic) => ({
+                                    label: poemTopicLabels[topic],
+                                    value: topic,
+                                }))}
+                            />
+                        </Form.Item>
+                    )}
                     <Form.Item label={"字体类型"}>
                         <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
                                      value={preference.fontFamily}

@@ -13,6 +13,7 @@ export interface CustomThemeInterface {
 }
 
 export interface PreferenceInterface {
+    poemSource: "smart" | "preset",
     poemTopic: string,
     fontFamily: "cursive" | "sans-serif",
     customTheme: CustomThemeInterface | null

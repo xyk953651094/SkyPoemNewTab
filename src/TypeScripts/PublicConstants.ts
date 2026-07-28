@@ -9,6 +9,7 @@ export const poemSwitchingInterval = 3600000;  // 图片切换间隔默认一小
 export const environment = process.env.NODE_ENV ?? "development";
 
 export const defaultPreference: PreferenceInterface = {
+    poemSource: "smart",
     poemTopic: "all",
     fontFamily: "cursive",
     customTheme: null
