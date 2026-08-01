@@ -13,8 +13,6 @@ import FocusComponent from "./Components/FocusComponent";
 import MenuComponent from "./Components/MenuComponent";
 import SunComponent from "./Components/SunComponent";
 import WaveComponent from "./Components/WaveComponent";
-// import GreetComponent from "./Components/GreetComponent";
-// import WeatherComponent from "./Components/WeatherComponent";
 
 const {Header, Content, Footer} = Layout;
 
@@ -65,7 +63,8 @@ function App() {
                 }
             }
             // 否则恢复上次主题色（诗词主题模式缓存命中时保持颜色不变）
-            if (themeStorage) {
+            // 老版本存储的主题可能不含 svgColors，缺失时回退 defaultTheme 避免 Sun/Wave 白屏
+            if (themeStorage && Array.isArray(themeStorage.svgColors) && themeStorage.svgColors.length >= 3) {
                 setTheme({
                     primaryColor: themeStorage.primaryColor,
                     secondaryColor: themeStorage.secondaryColor,
@@ -94,8 +93,6 @@ function App() {
                     <Row justify={"center"}>
                         <Col span={20} style={{textAlign: "right"}}>
                             <Space align={"center"}>
-                                {/*<GreetComponent theme={theme}/>*/}
-                                {/*<WeatherComponent theme={theme}/>*/}
                                 <TodoComponent theme={theme}/>
                                 <DailyComponent theme={theme}/>
                                 <FocusComponent theme={theme}/>

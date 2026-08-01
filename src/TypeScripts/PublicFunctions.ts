@@ -1,6 +1,4 @@
 import {
-    chinaObject,
-    chinaWindow,
     colorRegExp,
     darkThemeArray,
     lightThemeArray,
@@ -60,19 +58,6 @@ export function isEmpty(param: unknown): boolean {
     return false;
 }
 
-// 获取中国窗体
-export function getWindowClassName() {
-    let arrayLength = chinaWindow.length;
-    let index = Math.floor(Math.random() * arrayLength);
-    return chinaWindow[index];
-}
-
-export function getObjectClassName() {
-    let arrayLength = chinaObject.length;
-    let index = Math.floor(Math.random() * arrayLength);
-    return chinaObject[index];
-}
-
 // 设置颜色主题：跟随系统深色模式偏好，从对应色板中随机选取
 // 纯随机函数，不读取任何存储；自定颜色由调用方通过 preference.customTheme ?? setTheme() 决策
 export function setTheme() {
@@ -87,27 +72,7 @@ export function setTheme() {
     return themeArray[randomNum];
 }
 
-// 根据图片背景颜色获取元素反色效果
-export function getReverseColor(color: string) {
-    // 验证输入是否为7字符长且以#开头
-    if (!colorRegExp.test(color)) {
-        throw new Error("Invalid color format. Expected a 6-digit hexadecimal color code prefixed with '#'.");
-    }
-    
-    // 移除#并转换为16进制数，同时处理类型安全
-    const colorValue = Number.parseInt(color.slice(1), 16);
-    
-    // 计算反色
-    const reverseColorValue = 0xFFFFFF - colorValue;
-    
-    // 将计算出的反色值转换为16进制字符串，并确保它以6位数的形式呈现
-    const reverseColorHex = reverseColorValue.toString(16).padStart(6, '0');
-    
-    // 返回最终结果，确保结果以#开头
-    return "#" + reverseColorHex;
-}
-
-// 根据图片背景颜色改变字体颜色效果
+// 根据背景颜色改变字体颜色效果
 export function getFontColor(color: string): string {
     if (!colorRegExp.test(color)) {
         return "#ffffff";
@@ -136,7 +101,7 @@ export function getDeviceType(): string {
         "iPhone": ua.includes("iPhone"),
         "iPad": ua.includes("iPad"),
         "Android": ua.includes("Android"),
-    }, "");
+    }, "Other");
 }
 
 // 判断浏览器型号

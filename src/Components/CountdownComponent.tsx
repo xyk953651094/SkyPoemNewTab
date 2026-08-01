@@ -135,7 +135,7 @@ function CountdownComponent(props: DailyComponentProps) {
     // 日期选择器变化
     const datePickerOnChange: DatePickerProps["onChange"] = (_date, dateString) => {
         if (dateString && typeof dateString === "string") {
-            setSelectedTimeStamp(new Date(dateString).getTime());
+            setSelectedTimeStamp(dayjs(dateString).valueOf());
         } else {
             setSelectedTimeStamp(0);
         }

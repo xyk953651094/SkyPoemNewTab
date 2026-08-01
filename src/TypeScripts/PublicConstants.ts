@@ -1,4 +1,4 @@
-import {ExtensionDataInterface, PreferenceInterface} from './PublicInterface';
+import {PreferenceInterface} from './PublicInterface';
 import {getBrowserType, getDeviceType} from "./PublicFunctions";
 
 // 常用变量
@@ -6,18 +6,12 @@ export const deviceType = getDeviceType();  // 获取当前设备类型
 export const browserType = getBrowserType();
 export const colorRegExp = /^#[0-9A-Fa-f]{6}$/;
 export const poemSwitchingInterval = 3600000;  // 图片切换间隔默认一小时 3600000
-export const environment = process.env.NODE_ENV ?? "development";
 
 export const defaultPreference: PreferenceInterface = {
     poemSource: "smart",
     poemTopic: "all",
     fontFamily: "cursive",
     customTheme: null
-}
-
-// TODO:如果后续不再增加别的功能，例如数据导入导出、待办、倒数日之类的，这个常量可以删除。
-export const defaultExtensionData: ExtensionDataInterface = {
-    preference: defaultPreference
 }
 
 export const defaultTheme = {
@@ -103,7 +97,7 @@ export const lightThemeArray: ({ primaryColor: string; secondaryColor: string; s
 export const darkThemeArray: ({ primaryColor: string; secondaryColor: string; svgColors: string[]; }[]) = [
     {
         'primaryColor': '#114E7A', 'secondaryColor': '#EEF7F2',
-        'svgColors': ['#00C298', '#009DA5', '#00759B',]
+        'svgColors': ['#00C298', '#009DA5', '#00759B']
     },
     {
         'primaryColor': '#1A4D80', 'secondaryColor': '#FEFCF6',
@@ -111,7 +105,7 @@ export const darkThemeArray: ({ primaryColor: string; secondaryColor: string; sv
     },
     {
         'primaryColor': '#2F2F35', 'secondaryColor': '#C9DD22',
-        'svgColors': ['#E18575', '#A56477', '#614B61',]
+        'svgColors': ['#E18575', '#A56477', '#614B61']
     },
     {
         'primaryColor': '#2F4644', 'secondaryColor': '#D6D6D4',
@@ -127,33 +121,6 @@ export const darkThemeArray: ({ primaryColor: string; secondaryColor: string; sv
     },
     {
         'primaryColor': '#9B9690', 'secondaryColor': '#0D0831',
-        'svgColors': ['#526964', '#3C595F', '#2F4858',]
+        'svgColors': ['#526964', '#3C595F', '#2F4858']
     },
 ];
-
-// 中国窗体
-export const chinaWindow = [
-    "icon-chuangge1",
-    "icon-chuangge3",
-    "icon-chuangge4",
-    "icon-chuangge5",
-    "icon-chuangge7",
-    "icon-chuangge9",
-    "icon-chuangge10",
-    "icon-chuangge11",
-    "icon-chuangge12",
-    "icon-chuangge13",
-    "icon-chuangge14",
-    "icon-chuangge15",
-    "icon-chuangge16",
-]
-
-// 中国窗体
-export const chinaObject = [
-    "icon-chaye",
-    "icon-huaping",
-    "icon-huaping1",
-    "icon-meihua",
-    "icon-facaishu",
-    "icon-chuxiye",
-]

@@ -9,8 +9,8 @@ import {httpRequest} from "../TypeScripts/RequestFunctions";
 import {FillButton, HoverButton} from "./PublicComponents/PublicButton";
 import {PublicModal} from "./PublicComponents/PublicModal";
 
-const poemMaxSize = 30;
-const manualRefreshCooldown = 0; // 5 * 60 * 1000
+const poemMaxSize = 50;
+const manualRefreshCooldown = 5 * 60 * 1000;
 const STORAGE_KEY_JINRISHICI_TOKEN = "jinrishiciToken";
 
 interface PoemComponentProps {
@@ -24,9 +24,9 @@ function normalizePoemData(raw: any) {
     if (raw?.data) {
         return {
             content: raw.data.content,
-            author: raw.data.origin.author,
-            title: raw.data.origin.title,
-            dynasty: raw.data.origin.dynasty || "",
+            author: raw.data.origin?.author ?? "",
+            title: raw.data.origin?.title ?? "",
+            dynasty: raw.data.origin?.dynasty || "",
         };
     }
     return {

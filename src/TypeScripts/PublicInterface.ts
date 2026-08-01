@@ -18,7 +18,3 @@ export interface PreferenceInterface {
     fontFamily: "cursive" | "sans-serif",
     customTheme: CustomThemeInterface | null
 }
-
-export interface ExtensionDataInterface {
-    preference: PreferenceInterface;
-}

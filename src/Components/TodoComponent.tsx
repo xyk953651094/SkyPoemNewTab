@@ -137,7 +137,7 @@ function TodoComponent(props: TodoComponentProps) {
                                 {"完成"}
                             </HoverButton>
                         </Flex>
-                        {index < todoList.length - 1 && <Divider style={{margin: "0px", borderColor: props.theme.secondaryFontColor}}/>}
+                        {index < todoList.length - 1 && <Divider size="small" style={{margin: "0px", borderColor: props.theme.secondaryFontColor}}/>}
                     </React.Fragment>
                 ))
             )}
