@@ -48,7 +48,7 @@ function PoemComponent(props: PoemComponentProps) {
     const [customContentInputValue, setCustomContentInputValue] = useState("");
     const [customAuthorInputValue, setCustomAuthorInputValue] = useState("");
 
-    const themedMessage = createThemedMessage(theme, message);
+    const themedMessage = createThemedMessage(theme, preference.fontFamily, message);
 
     // 设置诗词内容
     function applyPoem(raw: any) {

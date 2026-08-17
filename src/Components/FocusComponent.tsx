@@ -28,6 +28,7 @@ const STORAGE_KEY_FOCUS_MODE = "focusMode";
 
 interface FocusComponentProps {
     theme: ThemeInterface;
+    fontFamily: string;
 }
 
 function FocusComponent(props: FocusComponentProps) {
@@ -35,7 +36,7 @@ function FocusComponent(props: FocusComponentProps) {
     const [focusSound, setFocusSound] = useState<string>("none");
     
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const themedMessage = createThemedMessage(props.theme, message);
+    const themedMessage = createThemedMessage(props.theme, props.fontFamily, message);
     
     // 白噪音选项
     const SOUND_OPTIONS = [

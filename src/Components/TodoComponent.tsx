@@ -31,6 +31,7 @@ interface TodoItem {
 
 interface TodoComponentProps {
     theme: ThemeInterface;
+    fontFamily: string;
 }
 
 function TodoComponent(props: TodoComponentProps) {
@@ -38,7 +39,7 @@ function TodoComponent(props: TodoComponentProps) {
     const [displayModal, setDisplayModal] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>("");
 
-    const themedMessage = createThemedMessage(props.theme, message);
+    const themedMessage = createThemedMessage(props.theme, props.fontFamily, message);
 
     // 持久化待办列表
     async function saveTodoList(list: TodoItem[]) {

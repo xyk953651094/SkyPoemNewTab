@@ -93,9 +93,9 @@ function App() {
                     <Row justify={"center"}>
                         <Col span={20} style={{textAlign: "right"}}>
                             <Space align={"center"}>
-                                <TodoComponent theme={theme}/>
-                                <DailyComponent theme={theme}/>
-                                <FocusComponent theme={theme}/>
+                                <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>
+                                <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>
+                                <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>
                                 <MenuComponent
                                     theme={theme}
                                     preference={preference}

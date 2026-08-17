@@ -30,7 +30,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     const {theme, preference, getPreference} = props;
     const [formDisabled, setFormDisabled] = useState<boolean>(false);
     const [activeModal, setActiveModal] = useState<"resetPreference" | "clearStorage" | "customTheme" | null>(null);
-    const themedMessage = createThemedMessage(theme, message);
+    const themedMessage = createThemedMessage(theme, preference.fontFamily, message);
     
     const customThemeState = preference.customTheme !== null;
     const [customPrimaryColor, setCustomPrimaryColor] = useState<string>(theme.primaryColor);
@@ -152,7 +152,9 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                           label: {color: props.theme.secondaryFontColor},
                           extra: {color: props.theme.secondaryFontColor}
                       }}>
-                    <Form.Item label={"诗词主题"} extra={"下次刷新诗词时生效"}>
+                    <Form.Item label={"诗词主题"} extra={preference.poemSource === "smart"
+                        ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐"
+                        : ""}>
                         <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
                                      value={preference.poemSource}
                                      onChange={poemSourceRadioOnChange}

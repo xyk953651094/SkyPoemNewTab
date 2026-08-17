@@ -133,9 +133,9 @@ export function truncateText(text: string, maxLength: number): string {
 // 创建带主题样式的 message 调用器，避免每次调用都重复写 styles 配置
 // 注意：在 useEffect(fn, []) 的异步函数中使用时，需通过 ref 读取最新的 themedMessage，
 // 否则捕获的是首次渲染时的空 theme。
-export function createThemedMessage(theme: ThemeInterface, message: any) {
+export function createThemedMessage(theme: ThemeInterface, fontFamily: string, message: any) {
     const themedStyles = {
-        root: {backgroundColor: theme.secondaryColor},
+        root: {backgroundColor: theme.secondaryColor, fontFamily: fontFamily},
         icon: {color: theme.secondaryFontColor},
         title: {color: theme.secondaryFontColor}
     };
