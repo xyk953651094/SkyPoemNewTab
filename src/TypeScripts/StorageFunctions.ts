@@ -115,9 +115,10 @@ export function fixPreference(preference: PreferenceInterface): PreferenceInterf
         }
     }
 
-    // 旧版 fontFamily 值 "sansSerif"（驼峰）已改为 "sans-serif"（CSS 合法值）
-    if ((preference as any).fontFamily === "sansSerif") {
-        (preference as any).fontFamily = "sans-serif";
+    // 旧版系统字体值已移除，统一迁移到霞鹜文楷
+    const removedFonts = ["sansSerif", "serif", "sans-serif", "cursive"];
+    if (removedFonts.includes((preference as any).fontFamily)) {
+        (preference as any).fontFamily = "LXGWWenKai";
         isFixed = true;
     }
 

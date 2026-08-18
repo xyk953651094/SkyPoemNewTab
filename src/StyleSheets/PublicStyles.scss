@@ -1,5 +1,47 @@
 @import "~antd/dist/reset.css";
 
+// 霞鹜文楷
+@font-face {
+    font-family: 'LXGWWenKai';
+    src: url('../Assets/Fonts/LXGWWenKai-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜文楷 Light
+@font-face {
+    font-family: 'LXGWWenKaiLight';
+    src: url('../Assets/Fonts/LXGWWenKai-Light.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜文楷繁体
+@font-face {
+    font-family: 'LXGWWenKaiTC';
+    src: url('../Assets/Fonts/LXGWWenKaiTC-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜臻楷
+@font-face {
+    font-family: 'LXGWZhenKai';
+    src: url('../Assets/Fonts/LXGWZhenKaiGB-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜文楷繁体 Light
+@font-face {
+    font-family: 'LXGWWenKaiTCLight';
+    src: url('../Assets/Fonts/LXGWWenKaiTC-Light.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜漫黑
+@font-face {
+    font-family: 'LXGWMarkerGothic';
+    src: url('../Assets/Fonts/LXGWMarkerGothic-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
 $heightRegular: 100px;
 $heightLarge: 300px;
 $desktop-large: "screen and (min-width: 2000px) and (orientation: landscape)";

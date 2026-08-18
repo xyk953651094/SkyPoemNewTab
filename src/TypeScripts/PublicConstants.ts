@@ -10,7 +10,7 @@ export const poemSwitchingInterval = 3600000;  // 图片切换间隔默认一小
 export const defaultPreference: PreferenceInterface = {
     poemSource: "preset",
     poemTopic: "all",
-    fontFamily: "cursive",
+    fontFamily: "LXGWWenKai",
     customTheme: null
 }
 

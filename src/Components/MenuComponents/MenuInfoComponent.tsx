@@ -19,11 +19,6 @@ const links: LinkItem[] = [
         gitlab: "https://gitlab.com/xyk953651094/SkyPoemNewTab/",
     },
     {
-        label: "更新日志",
-        github: "https://github.com/xyk953651094/SkyPoemNewTab/releases/",
-        gitlab: "https://gitlab.com/xyk953651094/SkyPoemNewTab/-/releases/",
-    },
-    {
         label: "帮助文档",
         github: "https://xyk953651094.github.io/SkyDocuments/",
         gitlab: "https://xyk953651094.gitlab.io/SkyDocuments/",

@@ -67,8 +67,8 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     }
 
     // 字体类型
-    function fontFamilyRadioOnChange(event: RadioChangeEvent) {
-        updatePreference({fontFamily: event.target.value});
+    function fontFamilySelectOnChange(value: PreferenceInterface["fontFamily"]) {
+        updatePreference({fontFamily: value});
         themedMessage.success("已更换字体类型");
     }
 
@@ -177,21 +177,18 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                         </Form.Item>
                     )}
                     <Form.Item label={"字体类型"}>
-                        <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
-                                     value={preference.fontFamily}
-                                     onChange={fontFamilyRadioOnChange}
-                                     options={[
-                                         {
-                                             value: "cursive",
-                                             label: "带衬线",
-                                             style: {color: props.theme.secondaryFontColor}
-                                         },
-                                         {
-                                             value: "sans-serif",
-                                             label: "无衬线",
-                                             style: {color: props.theme.secondaryFontColor}
-                                         }
-                                     ]}
+                        <Select
+                            style={{width: "100%"}}
+                            value={preference.fontFamily}
+                            onChange={fontFamilySelectOnChange}
+                            options={[
+                                {value: "LXGWWenKai", label: "霞鹜文楷"},
+                                {value: "LXGWWenKaiLight", label: "霞鹜文楷 Light"},
+                                {value: "LXGWWenKaiTC", label: "霞鹜文楷 · 繁体"},
+                                {value: "LXGWWenKaiTCLight", label: "霞鹜文楷 · 繁体 Light"},
+                                {value: "LXGWZhenKai", label: "霞鹜臻楷"},
+                                {value: "LXGWMarkerGothic", label: "霞鹜漫黑"},
+                            ]}
                         />
                     </Form.Item>
                     <Form.Item label={"自定颜色"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>

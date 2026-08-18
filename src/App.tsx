@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Col, ConfigProvider, Flex, Layout, Row, Space} from "antd";
+import {Col, ConfigProvider, Flex, Layout, notification, Row, Space} from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import "./StyleSheets/PublicStyles.scss"
 import {getFontColor} from "./TypeScripts/PublicFunctions";
@@ -72,6 +72,28 @@ function App() {
                     secondaryFontColor: getFontColor(themeStorage.secondaryColor),
                     svgColors: themeStorage.svgColors
                 });
+            }
+        });
+    }, []);
+
+    // 版本更新通知
+    useEffect(() => {
+        const currentVersion = require("../package.json").version;
+        getExtensionStorage(["lastNotifiedVersion"]).then(([lastNotifiedVersion]) => {
+            if (lastNotifiedVersion !== currentVersion) {
+                notification.open({
+                    icon: null,
+                    title: "已更新至版本 V" + currentVersion,
+                    description: "新增：字体切换、版本更新提醒等功能",
+                    placement: "bottomLeft",
+                    duration: 10,
+                    styles : {
+                        root: {backgroundColor: theme.secondaryColor},
+                        title: {color: theme.secondaryFontColor, fontFamily: preference.fontFamily},
+                        description: {color: theme.secondaryFontColor, fontFamily: preference.fontFamily},
+                    }
+                });
+                setExtensionStorage("lastNotifiedVersion", currentVersion);
             }
         });
     }, []);
