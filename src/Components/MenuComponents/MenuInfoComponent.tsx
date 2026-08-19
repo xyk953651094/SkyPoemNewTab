@@ -1,27 +1,37 @@
 import React from "react";
-import {Card, Col, Row} from "antd";
+import {Card, Form, Space} from "antd";
 import {GithubOutlined, GitlabOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import {ThemeInterface} from "../../TypeScripts/PublicInterface";
 import {HoverButton} from "../PublicComponents/PublicButton";
 
 const version = require("../../../package.json").version;
 
+interface LinkButton {
+    icon: React.ReactNode;
+    href: string;
+    target?: string;
+    text: string;
+}
+
 interface LinkItem {
     label: string;
-    github: string;
-    gitlab: string;
+    buttons: LinkButton[];
 }
 
 const links: LinkItem[] = [
     {
         label: "产品主页",
-        github: "https://github.com/xyk953651094/SkyPoemNewTab/",
-        gitlab: "https://gitlab.com/xyk953651094/SkyPoemNewTab/",
+        buttons: [
+            {icon: <GithubOutlined/>, href: "https://github.com/xyk953651094/SkyPoemNewTab/", target: "_blank", text: "Github"},
+            {icon: <GitlabOutlined/>, href: "https://gitlab.com/xyk953651094/SkyPoemNewTab/", target: "_blank", text: "Gitlab"},
+        ],
     },
     {
-        label: "帮助文档",
-        github: "https://xyk953651094.github.io/SkyDocuments/",
-        gitlab: "https://xyk953651094.gitlab.io/SkyDocuments/",
+        label: "作者主页",
+        buttons: [
+            {icon: <GithubOutlined/>, href: "https://github.com/xyk953651094/", target: "_blank", text: "Github"},
+            {icon: <GitlabOutlined/>, href: "https://gitlab.com/xyk953651094/", target: "_blank", text: "Gitlab"},
+        ],
     },
 ];
 
@@ -45,22 +55,22 @@ function MenuInfoComponent(props: MenuInfoComponentProps) {
                   },
                   extra: {color: props.theme.secondaryFontColor}
               }}>
-            <Row gutter={[0, 8]}>
+            <Form layout="vertical"
+                  styles={{
+                      label: {color: theme.secondaryFontColor}
+                  }}>
                 {links.map((link) => (
-                    <React.Fragment key={link.label}>
-                        <Col span={12} style={{textAlign: "center"}}>
-                            <HoverButton theme={theme} icon={<GithubOutlined/>} href={link.github} target={"_self"}>
-                                {link.label}
-                            </HoverButton>
-                        </Col>
-                        <Col span={12} style={{textAlign: "center"}}>
-                            <HoverButton theme={theme} icon={<GitlabOutlined/>} href={link.gitlab} target={"_self"}>
-                                {link.label}
-                            </HoverButton>
-                        </Col>
-                    </React.Fragment>
+                    <Form.Item key={link.label} label={link.label}>
+                        <Space>
+                            {link.buttons.map((button, index) => (
+                                <HoverButton key={index} theme={theme} icon={button.icon} href={button.href} target={button.target}>
+                                    {button.text}
+                                </HoverButton>
+                            ))}
+                        </Space>
+                    </Form.Item>
                 ))}
-            </Row>
+            </Form>
         </Card>
     );
 }
