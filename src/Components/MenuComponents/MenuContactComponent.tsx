@@ -41,7 +41,7 @@ function MenuContactComponent(props: MenuContactComponentProps) {
     const {theme} = props;
     
     return (
-        <Card title={"联系作者"} extra={<MailOutlined />}
+        <Card title={"帮助与反馈"} extra={<MailOutlined />}
               styles={{
                   root: {
                       backgroundColor: props.theme.secondaryColor,

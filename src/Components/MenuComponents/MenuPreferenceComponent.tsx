@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Card, ColorPicker, Divider, Form, message, Radio, RadioChangeEvent, Row, Select, Space, Typography} from "antd";
+import {Card, ColorPicker, Divider, Form, message, Radio, RadioChangeEvent, Row, Select, Space, Switch, Typography} from "antd";
 import {BgColorsOutlined, RedoOutlined, SettingOutlined, StopOutlined} from "@ant-design/icons";
 import type {ColorPickerProps, GetProp} from "antd";
 import {ThemeInterface, PreferenceInterface} from "../../TypeScripts/PublicInterface";
@@ -70,6 +70,12 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     function fontFamilySelectOnChange(value: PreferenceInterface["fontFamily"]) {
         updatePreference({fontFamily: value});
         themedMessage.success("已更换字体类型");
+    }
+
+    // 简洁模式
+    function simpleModeSwitchOnChange(checked: boolean) {
+        updatePreference({simpleMode: checked});
+        themedMessage.success(checked ? "已开启简洁模式" : "已关闭简洁模式");
     }
 
     // 自定颜色
@@ -189,6 +195,22 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                                 {value: "LXGWZhenKai", label: "霞鹜臻楷"},
                                 {value: "LXGWMarkerGothic", label: "霞鹜漫黑"},
                             ]}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"简洁模式"} extra={"开启后隐藏问候、天气、待办、倒数日和专注组件"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.simpleMode}
+                            onChange={simpleModeSwitchOnChange}
+                            styles={{
+                                root: {
+                                    backgroundColor: preference.simpleMode ? theme.primaryColor : ""
+                                },
+                                content: {
+                                    color: preference.simpleMode ? theme.primaryFontColor : ""
+                                }
+                            }}
                         />
                     </Form.Item>
                     <Form.Item label={"自定颜色"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>

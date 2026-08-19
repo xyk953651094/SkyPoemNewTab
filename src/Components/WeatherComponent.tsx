@@ -1,14 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Flex, Popover, Row, Typography} from "antd";
-import {EnvironmentOutlined, MoreOutlined} from "@ant-design/icons";
-import {getTimeDetails} from "../TypeScripts/PublicFunctions";
+import {Button, Tooltip} from "antd";
 import {ThemeInterface} from "../TypeScripts/PublicInterface";
 import {getExtensionStorage, setExtensionStorage} from "../TypeScripts/StorageFunctions";
 import {httpRequest} from "../TypeScripts/RequestFunctions";
-import {HoverButton} from "./PublicComponents/PublicButton";
 import "../StyleSheets/PublicStyles.scss";
-
-const {Text} = Typography;
 
 // 存储 key 常量
 const STORAGE_KEY_REQUEST_TIME = "lastWeatherRequestTime";
@@ -20,7 +15,7 @@ const CACHE_INTERVAL = 60 * 60 * 1000;
 // 天气信息 API
 const WEATHER_API_URL = "https://v2.jinrishici.com/info";
 
-// 天气详情链接
+// 天气搜索链接
 const WEATHER_URL = "https://www.bing.com/search?q=天气";
 
 // 缺省占位文本
@@ -47,102 +42,52 @@ function safeField(value: unknown, suffix: string = ""): string {
     return String(value) + suffix;
 }
 
-interface WeatherState {
-    weatherIcon: string;
-    weatherInfo: string;
-    location: string;
-    humidity: string;
-    pm25: string;
-    rainfall: string;
-    visibility: string;
-    windInfo: string;
-    lastRequestTime: string;
-}
-
-const defaultWeatherState: WeatherState = {
-    weatherIcon: "bi bi-cloud",
-    weatherInfo: PLACEHOLDER,
-    location: PLACEHOLDER,
-    humidity: PLACEHOLDER,
-    pm25: PLACEHOLDER,
-    rainfall: PLACEHOLDER,
-    visibility: PLACEHOLDER,
-    windInfo: PLACEHOLDER,
-    lastRequestTime: PLACEHOLDER,
-};
-
 interface WeatherComponentProps {
     theme: ThemeInterface;
 }
 
 function WeatherComponent(props: WeatherComponentProps) {
-    const [weather, setWeather] = useState<WeatherState>(defaultWeatherState);
-
-    // 从 API 返回的 data 中提取天气状态，所有字段都做兜底
-    function parseWeatherData(data: any): WeatherState {
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const [weatherIcon, setWeatherIcon] = useState<string>("bi bi-cloud");
+    const [weatherInfo, setWeatherInfo] = useState<string>(PLACEHOLDER);
+    
+    // 从 API 返回的 data 中提取天气图标和按钮文案
+    function parseWeatherData(data: any) {
         const weatherData = data?.weatherData;
-        if (!weatherData) {
-            return {...defaultWeatherState};
-        }
-
+        if (!weatherData) return;
+        
         const weatherText = safeField(weatherData.weather);
         const temperature = weatherData.temperature;
-
-        // 风速：方向 + 风力
-        const windDirection = weatherData.windDirection;
-        const windPower = weatherData.windPower;
-        let windInfo = PLACEHOLDER;
-        if (windDirection && windPower) {
-            windInfo = `${windDirection} ${windPower} 级`;
-        } else if (windDirection) {
-            windInfo = windDirection;
-        }
-
-        return {
-            weatherIcon: getWeatherIcon(weatherData.weather ?? ""),
-            weatherInfo: weatherText !== PLACEHOLDER && temperature !== null && temperature !== undefined
-                ? `${weatherText} ｜ ${temperature}°C`
-                : weatherText,
-            location: safeField(data?.region, "").replace("|", " · ") || PLACEHOLDER,
-            humidity: safeField(weatherData.humidity, "%"),
-            pm25: safeField(weatherData.pm25),
-            rainfall: safeField(weatherData.rainfall, "%"),
-            visibility: safeField(weatherData.visibility),
-            windInfo,
-            lastRequestTime: PLACEHOLDER, // 由调用方单独设置
-        };
+        
+        setWeatherIcon(getWeatherIcon(weatherData.weather ?? ""));
+        setWeatherInfo(
+            weatherText !== PLACEHOLDER && temperature !== null && temperature !== undefined
+                ? `${weatherText}｜${temperature}°C`
+                : weatherText
+        );
     }
-
-    // 格式化"上次更新"时间
-    function formatRequestTime(timestamp: number): string {
-        const timeDetails = getTimeDetails(new Date(timestamp));
-        return `${timeDetails.month}月${timeDetails.day}日 ${timeDetails.hour}:${timeDetails.minute}`;
-    }
-
+    
     // 请求天气 API
     async function fetchWeather() {
         try {
             const resultData = await httpRequest<any>(WEATHER_API_URL, {method: "GET"});
             await setExtensionStorage(STORAGE_KEY_REQUEST_TIME, Date.now());
-
+            
             if (resultData?.status === "success" && resultData?.data?.weatherData) {
                 await setExtensionStorage(STORAGE_KEY_WEATHER, resultData.data);
-                const parsed = parseWeatherData(resultData.data);
-                parsed.lastRequestTime = formatRequestTime(Date.now());
-                setWeather(parsed);
+                parseWeatherData(resultData.data);
+                setLoaded(true);
             }
-            // status 不是 success 或字段缺失时，保持当前状态（默认值或缓存值）
         } catch {
             // 请求失败时使用上一次缓存
-            const [lastWeather, lastTime] = await getExtensionStorage([STORAGE_KEY_WEATHER, STORAGE_KEY_REQUEST_TIME]);
+            const [lastWeather] = await getExtensionStorage([STORAGE_KEY_WEATHER]);
             if (lastWeather) {
-                const parsed = parseWeatherData(lastWeather);
-                parsed.lastRequestTime = lastTime ? formatRequestTime(lastTime) : PLACEHOLDER;
-                setWeather(parsed);
+                parseWeatherData(lastWeather);
+                setLoaded(true);
             }
         }
     }
-
+    
     // 初始化：读取缓存或请求 API
     useEffect(() => {
         async function loadWeather() {
@@ -150,98 +95,41 @@ function WeatherComponent(props: WeatherComponentProps) {
                 STORAGE_KEY_REQUEST_TIME,
                 STORAGE_KEY_WEATHER,
             ]);
-
+            
             const now = Date.now();
             if (lastRequestTime === undefined || now - lastRequestTime > CACHE_INTERVAL) {
                 await fetchWeather();
             } else if (lastWeather) {
-                const parsed = parseWeatherData(lastWeather);
-                parsed.lastRequestTime = formatRequestTime(lastRequestTime);
-                setWeather(parsed);
+                parseWeatherData(lastWeather);
+                setLoaded(true);
             }
         }
-
+        
         loadWeather();
     }, []);
-
-    const popoverTitle = (
-        <Row align={"middle"}>
-            <Col span={16}>
-                <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
-                    {"天气信息（上次更新：" + weather.lastRequestTime + "）"}
-                </Text>
-            </Col>
-            <Col span={8} style={{textAlign: "right"}}>
-                <HoverButton theme={props.theme} icon={<MoreOutlined/>} href={WEATHER_URL} target={"_self"}>
-                    {"更多信息"}
-                </HoverButton>
-            </Col>
-        </Row>
-    );
-
-    const popoverContent = (
-        <Flex vertical gap={"small"}>
-            <Row>
-                <Col span={12}>
-                    <HoverButton theme={props.theme} icon={<EnvironmentOutlined/>}>
-                        {"地理位置：" + weather.location}
-                    </HoverButton>
-                </Col>
-                <Col span={12}>
-                    <HoverButton theme={props.theme} icon={<i className="bi bi-wind"/>}>
-                        {"风速情况：" + weather.windInfo}
-                    </HoverButton>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={12}>
-                    <HoverButton theme={props.theme} icon={<i className="bi bi-moisture"/>}>
-                        {"空气湿度：" + weather.humidity}
-                    </HoverButton>
-                </Col>
-                <Col span={12}>
-                    <HoverButton theme={props.theme} icon={<i className="bi bi-water"/>}>
-                        {"空气质量：" + weather.pm25}
-                    </HoverButton>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={12}>
-                    <HoverButton theme={props.theme} icon={<i className="bi bi-cloud-rain"/>}>
-                        {"降雨概率：" + weather.rainfall}
-                    </HoverButton>
-                </Col>
-                <Col span={12}>
-                    <HoverButton theme={props.theme} icon={<i className="bi bi-eye"/>}>
-                        {"视线距离：" + weather.visibility}
-                    </HoverButton>
-                </Col>
-            </Row>
-        </Flex>
-    );
-
+    
+    if (!loaded) return null;
+    
     return (
-        <Popover
-            title={popoverTitle}
-            content={popoverContent}
-            placement={"bottomRight"}
-            color={props.theme.secondaryColor}
-            styles={{root: {minWidth: "600px"}}}
-        >
+        <Tooltip title={"更多信息"} placement={"bottom"} color={props.theme.secondaryColor} styles={{
+            container: {color: props.theme.secondaryFontColor},
+        }}>
             <Button
-                icon={<i className={weather.weatherIcon}/>}
+                icon={<i className={weatherIcon}/>}
                 size={"large"}
                 type={"primary"}
                 className={"floatingButton"}
+                href={WEATHER_URL}
+                target={"_self"}
                 style={{
-                    cursor: "default",
+                    cursor: "pointer",
                     backgroundColor: props.theme.secondaryColor,
                     color: props.theme.secondaryFontColor,
                 }}
             >
-                {weather.weatherInfo}
+                {weatherInfo}
             </Button>
-        </Popover>
+        </Tooltip>
     );
 }
 

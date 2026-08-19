@@ -20,7 +20,7 @@ interface LinkItem {
 
 const links: LinkItem[] = [
     {
-        label: "产品主页",
+        label: "插件主页",
         buttons: [
             {icon: <GithubOutlined/>, href: "https://github.com/xyk953651094/SkyPoemNewTab/", target: "_blank", text: "Github"},
             {icon: <GitlabOutlined/>, href: "https://gitlab.com/xyk953651094/SkyPoemNewTab/", target: "_blank", text: "Gitlab"},
@@ -43,7 +43,7 @@ function MenuInfoComponent(props: MenuInfoComponentProps) {
     const {theme} = props;
     
     return (
-        <Card title={"产品信息（ V" + version + " ）"} extra={<InfoCircleOutlined />}
+        <Card title={"关于云开诗词新标签页（ V" + version + " ）"} extra={<InfoCircleOutlined />}
               styles={{
                   root: {
                       backgroundColor: props.theme.secondaryColor,

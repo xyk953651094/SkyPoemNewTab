@@ -13,6 +13,8 @@ import FocusComponent from "./Components/FocusComponent";
 import MenuComponent from "./Components/MenuComponent";
 import SunComponent from "./Components/SunComponent";
 import WaveComponent from "./Components/WaveComponent";
+import WeatherComponent from "./Components/WeatherComponent";
+import GreetComponent from "./Components/GreetComponent";
 
 const {Header, Content, Footer} = Layout;
 
@@ -84,7 +86,7 @@ function App() {
                 notification.open({
                     icon: null,
                     title: "已更新至版本 V" + currentVersion,
-                    description: "新增：字体切换、版本更新提醒等功能",
+                    description: "新增：字体切换、简洁模式、更新提醒等功能",
                     placement: "bottomLeft",
                     duration: 10,
                     styles : {
@@ -115,9 +117,11 @@ function App() {
                     <Row justify={"center"}>
                         <Col span={20} style={{textAlign: "right"}}>
                             <Space align={"center"}>
-                                <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>
-                                <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>
-                                <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>
+                                {!preference.simpleMode && <GreetComponent theme={theme}/>}
+                                {!preference.simpleMode && <WeatherComponent theme={theme}/>}
+                                {!preference.simpleMode && <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {!preference.simpleMode && <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {!preference.simpleMode && <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>}
                                 <MenuComponent
                                     theme={theme}
                                     preference={preference}

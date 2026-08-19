@@ -1,35 +1,22 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Popover, Row, Space, Typography} from "antd";
-import {CalendarOutlined, CheckCircleOutlined, CloseCircleOutlined, MoreOutlined} from "@ant-design/icons";
-import {getTimeDetails, truncateText} from "../TypeScripts/PublicFunctions";
+import {Button, Tooltip} from "antd";
+import {getTimeDetails} from "../TypeScripts/PublicFunctions";
 import {ThemeInterface} from "../TypeScripts/PublicInterface";
 import {getExtensionStorage, setExtensionStorage} from "../TypeScripts/StorageFunctions";
 import {httpRequest} from "../TypeScripts/RequestFunctions";
 import {getGreetInfo} from "../TypeScripts/GreetComponent";
-import {HoverButton} from "./PublicComponents/PublicButton";
 import "../StyleSheets/PublicStyles.scss";
-
-const {Text} = Typography;
 
 // 存储 key 常量
 const STORAGE_KEY_REQUEST_DATE = "lastHolidayRequestDate";
 const STORAGE_KEY_HOLIDAY = "lastHoliday";
 
-// 宜忌最大显示长度
-const MAX_TEXT_SIZE = 50;
-
-// 万年历链接
+// 万年历搜索链接
 const CALENDAR_URL = "https://www.bing.com/search?q=万年历";
 
 interface HolidayData {
     solarTerms: string;
     typeDes: string;
-    yearTips: string;
-    chineseZodiac: string;
-    lunarCalendar: string;
-    constellation: string;
-    suit: string;
-    avoid: string;
 }
 
 interface GreetComponentProps {
@@ -38,45 +25,32 @@ interface GreetComponentProps {
 
 function GreetComponent(props: GreetComponentProps) {
     const greetInfo = getGreetInfo();
-    const [holidayContent, setHolidayContent] = useState<string>("暂无信息");
-    const [calendar, setCalendar] = useState<string>("");
-    const [suit, setSuit] = useState<string>("暂无信息");
-    const [avoid, setAvoid] = useState<string>("暂无信息");
-
-    // 处理节假日数据（所有字段做兜底，防止 API 字段变动）
+    const [holidayLoaded, setHolidayLoaded] = useState<boolean>(false);
+    const [holidayContent, setHolidayContent] = useState<string>("");
+    
+    // 处理节假日数据（仅提取按钮文案，所有字段做兜底）
     function setHoliday(data: HolidayData) {
         const solarTerms = data?.solarTerms ?? "";
         const typeDes = data?.typeDes ?? "";
-
-        let content = solarTerms || "暂无信息";
+        
+        let content = solarTerms || "";
         if (solarTerms && solarTerms.indexOf("后") === -1) {
             content = "今日" + content;
         }
         if (typeDes && typeDes !== "休息日" && typeDes !== "工作日") {
             content = content + " · " + typeDes;
         }
-
-        const timeDetails = getTimeDetails(new Date());
-        const yearTips = data?.yearTips ?? "";
-        const chineseZodiac = data?.chineseZodiac ?? "";
-        const lunarCalendar = data?.lunarCalendar ?? "";
-        const constellation = data?.constellation ?? "";
-
+        
         setHolidayContent(content);
-        setCalendar(
-            `${timeDetails.year}年${timeDetails.month}月${timeDetails.day}日 ${timeDetails.week} ｜ ` +
-            `${yearTips}${chineseZodiac}年 ｜ ${lunarCalendar} ｜ ${constellation}`
-        );
-        setSuit(data?.suit ? data.suit.replace(/\./g, " · ") : "暂无信息");
-        setAvoid(data?.avoid ? data.avoid.replace(/\./g, " · ") : "暂无信息");
+        setHolidayLoaded(true);
     }
-
+    
     // 请求节假日 API
     async function fetchHoliday() {
         const timeDetails = getTimeDetails(new Date());
         const dateStr = `${timeDetails.year}${timeDetails.month}${timeDetails.day}`;
         const url = `https://www.mxnzp.com/api/holiday/single/${dateStr}`;
-
+        
         try {
             const resultData = await httpRequest<any>(url, {
                 method: "GET",
@@ -98,7 +72,7 @@ function GreetComponent(props: GreetComponentProps) {
             }
         }
     }
-
+    
     // 初始化：读取缓存或请求 API（同一天只请求一次）
     useEffect(() => {
         async function loadHoliday() {
@@ -106,73 +80,40 @@ function GreetComponent(props: GreetComponentProps) {
                 STORAGE_KEY_REQUEST_DATE,
                 STORAGE_KEY_HOLIDAY,
             ]);
-
+            
             const timeDetails = getTimeDetails(new Date());
             const todayStr = `${timeDetails.year}${timeDetails.month}${timeDetails.day}`;
-
+            
             if (lastRequestDate === todayStr && lastHoliday) {
-                // 今天已请求过，直接使用缓存
                 setHoliday(lastHoliday);
             } else {
-                // 跨天或首次使用，重新请求
                 await fetchHoliday();
             }
         }
-
+        
         loadHoliday();
     }, []);
-
-    const popoverTitle = (
-        <Row align={"middle"}>
-            <Col span={8}>
-                <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
-                    {"万年历"}
-                </Text>
-            </Col>
-            <Col span={16} style={{textAlign: "right"}}>
-                <HoverButton theme={props.theme} icon={<MoreOutlined/>} href={CALENDAR_URL} target={"_self"}>
-                    {"更多信息"}
-                </HoverButton>
-            </Col>
-        </Row>
-    );
-
-    const popoverContent = (
-        <Space orientation={"vertical"}>
-            <HoverButton theme={props.theme} icon={<CalendarOutlined/>}>
-                {calendar}
-            </HoverButton>
-            <HoverButton theme={props.theme} icon={<CheckCircleOutlined/>}>
-                {"宜：" + truncateText(suit, MAX_TEXT_SIZE)}
-            </HoverButton>
-            <HoverButton theme={props.theme} icon={<CloseCircleOutlined/>}>
-                {"忌：" + truncateText(avoid, MAX_TEXT_SIZE)}
-            </HoverButton>
-        </Space>
-    );
-
+    
     return (
-        <Popover
-            title={popoverTitle}
-            content={popoverContent}
-            placement={"bottomRight"}
-            color={props.theme.secondaryColor}
-            styles={{root: {minWidth: "600px"}}}
-        >
+        <Tooltip title={"更多信息"} placement={"bottom"} color={props.theme.secondaryColor} styles={{
+            container: {color: props.theme.secondaryFontColor},
+        }}>
             <Button
                 icon={<i className={greetInfo.icon}/>}
                 size={"large"}
                 type={"primary"}
                 className={"floatingButton"}
+                href={holidayLoaded ? CALENDAR_URL : undefined}
+                target={"_self"}
                 style={{
-                    cursor: "default",
+                    cursor: holidayLoaded ? "pointer" : "default",
                     backgroundColor: props.theme.secondaryColor,
                     color: props.theme.secondaryFontColor,
                 }}
             >
-                {greetInfo.greet + " ｜ " + holidayContent}
+                {holidayLoaded ? `${greetInfo.greet}｜${holidayContent}` : greetInfo.greet}
             </Button>
-        </Popover>
+        </Tooltip>
     );
 }
 
