@@ -59,8 +59,9 @@ function GreetComponent(props: GreetComponentProps) {
                     app_secret: "RVlRVjZTYXVqeHB3WCtQUG5lM0h0UT09",
                 },
             });
-            await setExtensionStorage(STORAGE_KEY_REQUEST_DATE, dateStr);
             if (resultData.code === 1) {
+                // 仅在拿到有效数据时才标记「今日已请求」，避免 code!==1（限流/密钥失效）时锁定当天、静默沿用旧缓存
+                await setExtensionStorage(STORAGE_KEY_REQUEST_DATE, dateStr);
                 await setExtensionStorage(STORAGE_KEY_HOLIDAY, resultData.data);
                 setHoliday(resultData.data);
             }
@@ -104,14 +105,14 @@ function GreetComponent(props: GreetComponentProps) {
                 type={"primary"}
                 className={"floatingButton"}
                 href={holidayLoaded ? CALENDAR_URL : undefined}
-                target={"_self"}
+                target={"_blank"}
                 style={{
                     cursor: holidayLoaded ? "pointer" : "default",
                     backgroundColor: props.theme.secondaryColor,
                     color: props.theme.secondaryFontColor,
                 }}
             >
-                {holidayLoaded ? `${greetInfo.greet}｜${holidayContent}` : greetInfo.greet}
+                {holidayLoaded ? `${greetInfo.greet} · ${holidayContent}` : greetInfo.greet}
             </Button>
         </Tooltip>
     );

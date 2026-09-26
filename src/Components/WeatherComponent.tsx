@@ -62,7 +62,7 @@ function WeatherComponent(props: WeatherComponentProps) {
         setWeatherIcon(getWeatherIcon(weatherData.weather ?? ""));
         setWeatherInfo(
             weatherText !== PLACEHOLDER && temperature !== null && temperature !== undefined
-                ? `${weatherText}｜${temperature}°C`
+                ? `${weatherText} · ${temperature}°C`
                 : weatherText
         );
     }
@@ -120,7 +120,7 @@ function WeatherComponent(props: WeatherComponentProps) {
                 type={"primary"}
                 className={"floatingButton"}
                 href={WEATHER_URL}
-                target={"_self"}
+                target={"_blank"}
                 style={{
                     cursor: "pointer",
                     backgroundColor: props.theme.secondaryColor,

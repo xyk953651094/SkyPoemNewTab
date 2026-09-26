@@ -32,7 +32,7 @@ function normalizePoemData(raw: any) {
     return {
         content: raw.content,
         author: raw.author,
-        title: raw.origin,
+        title: raw.origin?.title ?? (typeof raw.origin === "string" ? raw.origin : ""),
         dynasty: "",
     };
 }
@@ -62,7 +62,10 @@ function PoemComponent(props: PoemComponentProps) {
 
         setPoemContent(content);
         setPoemAuthor(truncateText(authorText, poemMaxSize));
-        setMatchTags(raw?.data?.matchTags ?? []);
+        setMatchTags(
+            raw?.data?.matchTags ??
+            (raw?.category ? raw.category.split("-").filter(Boolean) : [])
+        );
     }
 
     // 防止连点：请求进行中忽略新的请求（用 ref 避免极快双击的状态竞态）

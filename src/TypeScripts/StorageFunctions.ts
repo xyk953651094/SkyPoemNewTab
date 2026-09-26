@@ -116,7 +116,7 @@ export function fixPreference(preference: PreferenceInterface): PreferenceInterf
     }
 
     // 旧版系统字体值已移除，统一迁移到霞鹜文楷
-    const removedFonts = ["sansSerif", "serif", "sans-serif", "cursive"];
+    const removedFonts = ["sansSerif", "serif", "sans-serif", "cursive", "LXGWZhenKai"];
     if (removedFonts.includes((preference as any).fontFamily)) {
         (preference as any).fontFamily = "LXGWWenKai";
         isFixed = true;

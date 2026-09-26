@@ -20,7 +20,8 @@
     ],
     "host_permissions": [
         "https://v1.jinrishici.com/*",
-        "https://v2.jinrishici.com/*"
+        "https://v2.jinrishici.com/*",
+        "https://www.mxnzp.com/*"
     ],
     "icons": {
         "16": "Assets/icon-16.png",

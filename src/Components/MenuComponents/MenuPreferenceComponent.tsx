@@ -189,10 +189,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             onChange={fontFamilySelectOnChange}
                             options={[
                                 {value: "LXGWWenKai", label: "霞鹜文楷"},
-                                {value: "LXGWWenKaiLight", label: "霞鹜文楷 Light"},
                                 {value: "LXGWWenKaiTC", label: "霞鹜文楷 · 繁体"},
-                                {value: "LXGWWenKaiTCLight", label: "霞鹜文楷 · 繁体 Light"},
-                                {value: "LXGWZhenKai", label: "霞鹜臻楷"},
                                 {value: "LXGWMarkerGothic", label: "霞鹜漫黑"},
                             ]}
                         />
