@@ -64,7 +64,7 @@ function TodoComponent(props: TodoComponentProps) {
             setDisplayModal(true);
             setInputValue("");
         } else {
-            themedMessage.error(`待办数量最多为${TODO_MAX_SIZE}个`);
+            themedMessage.error(`事目数量最多为${TODO_MAX_SIZE}个`);
         }
     }
 
@@ -103,12 +103,12 @@ function TodoComponent(props: TodoComponentProps) {
         <Row align={"middle"}>
             <Col span={8}>
                 <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
-                    {`待办事项 ${todoList.length} / ${TODO_MAX_SIZE}`}
+                    {`事目 ${todoList.length} / ${TODO_MAX_SIZE}`}
                 </Text>
             </Col>
             <Col span={16} style={{textAlign: "right"}}>
                 <HoverButton theme={props.theme} icon={<PlusOutlined/>} onClick={showAddModalBtnOnClick}>
-                    {"添加待办"}
+                    {"添加事目"}
                 </HoverButton>
             </Col>
         </Row>
@@ -165,19 +165,19 @@ function TodoComponent(props: TodoComponentProps) {
                         color: props.theme.secondaryFontColor,
                     }}
                 >
-                    {`${todoList.length} 个待办`}
+                    {`${todoList.length} 个事目`}
                 </Button>
             </Popover>
             <PublicModal
                 theme={props.theme}
                 open={displayModal}
-                titleText={`添加待办 ${todoList.length} / ${TODO_MAX_SIZE}`}
+                titleText={`添加事目 ${todoList.length} / ${TODO_MAX_SIZE}`}
                 titleIcon={<CarryOutOutlined/>}
                 onOk={modalOkBtnOnClick}
                 onCancel={() => setDisplayModal(false)}
             >
                 <Input
-                    placeholder="请输入待办内容"
+                    placeholder="请输入事目内容"
                     size={"large"}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
