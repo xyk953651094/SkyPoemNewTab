@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Col, ConfigProvider, Flex, Layout, Row, Space} from "antd";
+import {Col, ConfigProvider, Flex, Layout, notification, Row, Space} from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import "./StyleSheets/PublicStyles.scss"
 import {getFontColor} from "./TypeScripts/PublicFunctions";
@@ -13,8 +13,8 @@ import FocusComponent from "./Components/FocusComponent";
 import MenuComponent from "./Components/MenuComponent";
 import SunComponent from "./Components/SunComponent";
 import WaveComponent from "./Components/WaveComponent";
-// import GreetComponent from "./Components/GreetComponent";
-// import WeatherComponent from "./Components/WeatherComponent";
+import WeatherComponent from "./Components/WeatherComponent";
+import GreetComponent from "./Components/GreetComponent";
 
 const {Header, Content, Footer} = Layout;
 
@@ -65,7 +65,8 @@ function App() {
                 }
             }
             // 否则恢复上次主题色（诗词主题模式缓存命中时保持颜色不变）
-            if (themeStorage) {
+            // 老版本存储的主题可能不含 svgColors，缺失时回退 defaultTheme 避免 Sun/Wave 白屏
+            if (themeStorage && Array.isArray(themeStorage.svgColors) && themeStorage.svgColors.length >= 3) {
                 setTheme({
                     primaryColor: themeStorage.primaryColor,
                     secondaryColor: themeStorage.secondaryColor,
@@ -73,6 +74,28 @@ function App() {
                     secondaryFontColor: getFontColor(themeStorage.secondaryColor),
                     svgColors: themeStorage.svgColors
                 });
+            }
+        });
+    }, []);
+
+    // 版本更新通知
+    useEffect(() => {
+        const currentVersion = require("../package.json").version;
+        getExtensionStorage(["lastNotifiedVersion"]).then(([lastNotifiedVersion]) => {
+            if (lastNotifiedVersion !== currentVersion) {
+                notification.open({
+                    icon: null,
+                    title: "已更新至版本 V" + currentVersion,
+                    description: "新增：字体切换、简洁模式、更新提醒等功能",
+                    placement: "bottomLeft",
+                    duration: 10,
+                    styles : {
+                        root: {backgroundColor: theme.secondaryColor},
+                        title: {color: theme.secondaryFontColor, fontFamily: preference.fontFamily},
+                        description: {color: theme.secondaryFontColor, fontFamily: preference.fontFamily},
+                    }
+                });
+                setExtensionStorage("lastNotifiedVersion", currentVersion);
             }
         });
     }, []);
@@ -94,11 +117,11 @@ function App() {
                     <Row justify={"center"}>
                         <Col span={20} style={{textAlign: "right"}}>
                             <Space align={"center"}>
-                                {/*<GreetComponent theme={theme}/>*/}
-                                {/*<WeatherComponent theme={theme}/>*/}
-                                <TodoComponent theme={theme}/>
-                                <DailyComponent theme={theme}/>
-                                <FocusComponent theme={theme}/>
+                                {!preference.simpleMode && <GreetComponent theme={theme}/>}
+                                {!preference.simpleMode && <WeatherComponent theme={theme}/>}
+                                {!preference.simpleMode && <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {!preference.simpleMode && <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {!preference.simpleMode && <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>}
                                 <MenuComponent
                                     theme={theme}
                                     preference={preference}

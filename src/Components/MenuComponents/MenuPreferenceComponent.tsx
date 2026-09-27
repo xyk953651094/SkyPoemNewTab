@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Card, ColorPicker, Divider, Form, message, Radio, RadioChangeEvent, Row, Select, Space, Typography} from "antd";
+import {Card, ColorPicker, Divider, Form, message, Radio, RadioChangeEvent, Row, Select, Space, Switch, Typography} from "antd";
 import {BgColorsOutlined, RedoOutlined, SettingOutlined, StopOutlined} from "@ant-design/icons";
 import type {ColorPickerProps, GetProp} from "antd";
 import {ThemeInterface, PreferenceInterface} from "../../TypeScripts/PublicInterface";
@@ -30,7 +30,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     const {theme, preference, getPreference} = props;
     const [formDisabled, setFormDisabled] = useState<boolean>(false);
     const [activeModal, setActiveModal] = useState<"resetPreference" | "clearStorage" | "customTheme" | null>(null);
-    const themedMessage = createThemedMessage(theme, message);
+    const themedMessage = createThemedMessage(theme, preference.fontFamily, message);
     
     const customThemeState = preference.customTheme !== null;
     const [customPrimaryColor, setCustomPrimaryColor] = useState<string>(theme.primaryColor);
@@ -52,6 +52,14 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
         setExtensionStorage("preference", newPreference);
     }
 
+    // 诗词来源
+    function poemSourceRadioOnChange(event: RadioChangeEvent) {
+        updatePreference({poemSource: event.target.value});
+        themedMessage.success(event.target.value === "smart"
+            ? "已切换到智能主题，下次刷新诗词时生效"
+            : "已切换到预设主题，下次刷新诗词时生效");
+    }
+
     // 诗词主题
     function poemTopicSelectOnChange(value: string) {
         updatePreference({poemTopic: value});
@@ -59,9 +67,15 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     }
 
     // 字体类型
-    function fontFamilyRadioOnChange(event: RadioChangeEvent) {
-        updatePreference({fontFamily: event.target.value});
+    function fontFamilySelectOnChange(value: PreferenceInterface["fontFamily"]) {
+        updatePreference({fontFamily: value});
         themedMessage.success("已更换字体类型");
+    }
+
+    // 简洁模式
+    function simpleModeSwitchOnChange(checked: boolean) {
+        updatePreference({simpleMode: checked});
+        themedMessage.success(checked ? "已开启简洁模式" : "已关闭简洁模式");
     }
 
     // 自定颜色
@@ -144,33 +158,56 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                           label: {color: props.theme.secondaryFontColor},
                           extra: {color: props.theme.secondaryFontColor}
                       }}>
-                    <Form.Item label={"诗词主题"} extra={"下次刷新诗词时生效"}>
+                    <Form.Item label={"诗词主题"} extra={preference.poemSource === "smart"
+                        ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐"
+                        : ""}>
+                        <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
+                                     value={preference.poemSource}
+                                     onChange={poemSourceRadioOnChange}
+                                     options={[
+                                         {value: "smart", label: "智能主题", style: {color: theme.secondaryFontColor}},
+                                         {value: "preset", label: "预设主题", style: {color: theme.secondaryFontColor}}
+                                     ]}/>
+                    </Form.Item>
+                    {preference.poemSource === "preset" && (
+                        <Form.Item label={"预设主题"} extra={"下次刷新诗词时生效"}>
+                            <Select
+                                style={{width: "100%"}}
+                                value={preference.poemTopic}
+                                onChange={poemTopicSelectOnChange}
+                                options={poemTopics.map((topic) => ({
+                                    label: poemTopicLabels[topic],
+                                    value: topic,
+                                }))}
+                            />
+                        </Form.Item>
+                    )}
+                    <Form.Item label={"字体类型"}>
                         <Select
                             style={{width: "100%"}}
-                            value={preference.poemTopic}
-                            onChange={poemTopicSelectOnChange}
-                            options={poemTopics.map((topic) => ({
-                                label: poemTopicLabels[topic],
-                                value: topic,
-                            }))}
+                            value={preference.fontFamily}
+                            onChange={fontFamilySelectOnChange}
+                            options={[
+                                {value: "LXGWWenKai", label: "霞鹜文楷"},
+                                {value: "LXGWWenKaiTC", label: "霞鹜文楷 · 繁体"},
+                                {value: "LXGWMarkerGothic", label: "霞鹜漫黑"},
+                            ]}
                         />
                     </Form.Item>
-                    <Form.Item label={"字体类型"}>
-                        <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
-                                     value={preference.fontFamily}
-                                     onChange={fontFamilyRadioOnChange}
-                                     options={[
-                                         {
-                                             value: "cursive",
-                                             label: "带衬线",
-                                             style: {color: props.theme.secondaryFontColor}
-                                         },
-                                         {
-                                             value: "sans-serif",
-                                             label: "无衬线",
-                                             style: {color: props.theme.secondaryFontColor}
-                                         }
-                                     ]}
+                    <Form.Item label={"简洁模式"} extra={"开启后隐藏问候、天气、待办、倒数日和专注组件"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.simpleMode}
+                            onChange={simpleModeSwitchOnChange}
+                            styles={{
+                                root: {
+                                    backgroundColor: preference.simpleMode ? theme.primaryColor : ""
+                                },
+                                content: {
+                                    color: preference.simpleMode ? theme.primaryFontColor : ""
+                                }
+                            }}
                         />
                     </Form.Item>
                     <Form.Item label={"自定颜色"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>

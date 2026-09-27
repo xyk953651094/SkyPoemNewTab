@@ -39,6 +39,7 @@ interface DailyItem {
 
 interface DailyComponentProps {
     theme: ThemeInterface;
+    fontFamily: string;
 }
 
 function CountdownComponent(props: DailyComponentProps) {
@@ -47,7 +48,7 @@ function CountdownComponent(props: DailyComponentProps) {
     const [inputValue, setInputValue] = useState<string>("");
     const [selectedTimeStamp, setSelectedTimeStamp] = useState<number>(0);
 
-    const themedMessage = createThemedMessage(props.theme, message);
+    const themedMessage = createThemedMessage(props.theme, props.fontFamily, message);
 
     // 持久化倒数日列表
     async function saveDailyList(list: DailyItem[]) {
@@ -108,7 +109,7 @@ function CountdownComponent(props: DailyComponentProps) {
             setInputValue("");
             setSelectedTimeStamp(0);
         } else {
-            themedMessage.error(`倒数日数量最多为${DAILY_MAX_SIZE}个`);
+            themedMessage.error(`计日数量最多为${DAILY_MAX_SIZE}个`);
         }
     }
 
@@ -135,7 +136,7 @@ function CountdownComponent(props: DailyComponentProps) {
     // 日期选择器变化
     const datePickerOnChange: DatePickerProps["onChange"] = (_date, dateString) => {
         if (dateString && typeof dateString === "string") {
-            setSelectedTimeStamp(new Date(dateString).getTime());
+            setSelectedTimeStamp(dayjs(dateString).valueOf());
         } else {
             setSelectedTimeStamp(0);
         }
@@ -156,12 +157,12 @@ function CountdownComponent(props: DailyComponentProps) {
         <Row align={"middle"}>
             <Col span={8}>
                 <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
-                    {`倒数日 ${dailyList.length} / ${DAILY_MAX_SIZE}`}
+                    {`计日 ${dailyList.length} / ${DAILY_MAX_SIZE}`}
                 </Text>
             </Col>
             <Col span={16} style={{textAlign: "right"}}>
                 <HoverButton theme={props.theme} icon={<PlusOutlined/>} onClick={showAddModalBtnOnClick}>
-                    {"添加倒数"}
+                    {"添加计日"}
                 </HoverButton>
             </Col>
         </Row>
@@ -219,14 +220,14 @@ function CountdownComponent(props: DailyComponentProps) {
                         color: props.theme.secondaryFontColor,
                     }}
                 >
-                    {`${dailyList.length} 个倒数`}
+                    {`${dailyList.length} 个计日`}
                 </Button>
             </Popover>
             
             <PublicModal
                 theme={props.theme}
                 open={displayModal}
-                titleText={`添加倒数 ${dailyList.length} / ${DAILY_MAX_SIZE}`}
+                titleText={`添加计日 ${dailyList.length} / ${DAILY_MAX_SIZE}`}
                 titleIcon={<CalendarOutlined/>}
                 onOk={modalOkBtnOnClick}
                 onCancel={() => setDisplayModal(false)}

@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col, Row} from "antd";
+import {Card, Form, Space} from "antd";
 import {DislikeOutlined, GithubOutlined, GitlabOutlined, LikeOutlined, MailOutlined} from "@ant-design/icons";
 import {ThemeInterface} from "../../TypeScripts/PublicInterface";
 import {HoverButton} from "../PublicComponents/PublicButton";
@@ -8,24 +8,40 @@ interface MenuContactComponentProps {
     theme: ThemeInterface;
 }
 
-interface ContactLink {
+interface LinkButton {
     icon: React.ReactNode;
     href: string;
-    label: string;
+    target?: string;
+    text: string;
 }
 
-const contactLinks: ContactLink[] = [
-    {icon: <GithubOutlined/>, href: "https://github.com/xyk953651094/", label: "作者主页"},
-    {icon: <GitlabOutlined/>, href: "https://gitlab.com/xyk953651094/", label: "作者主页"},
-    {icon: <GithubOutlined/>, href: "https://github.com/xyk953651094?tab=repositories", label: "更多产品"},
-    {icon: <GitlabOutlined/>, href: "https://gitlab.com/users/xyk953651094/projects/", label: "更多产品"},
-    {icon: <LikeOutlined/>, href: "mailto:xyk953651094@qq.com?&subject=云开新标签页-功能建议&body=温馨提示：建议前烦请优先查阅帮助文档", label: "功能建议"},
-    {icon: <DislikeOutlined/>, href: "mailto:xyk953651094@qq.com?&subject=云开新标签页-问题反馈&body=温馨提示：反馈前烦请优先查阅帮助文档", label: "问题反馈"},
+interface LinkItem {
+    label: string;
+    buttons: LinkButton[];
+}
+
+const links: LinkItem[] = [
+    {
+        label: "帮助文档",
+        buttons: [
+            {icon: <GithubOutlined/>, href: "https://xyk953651094.github.io/SkyDocuments/", target: "_blank", text: "Github"},
+            {icon: <GitlabOutlined/>, href: "https://xyk953651094.gitlab.io/SkyDocuments/", target: "_blank", text: "Gitlab"},
+        ],
+    },
+    {
+        label: "建议反馈",
+        buttons: [
+            {icon: <LikeOutlined/>, href: "mailto:xyk953651094@qq.com?&subject=云开诗词新标签页-功能建议", text: "功能建议"},
+            {icon: <DislikeOutlined/>, href: "mailto:xyk953651094@qq.com?&subject=云开诗词新标签页-问题反馈", text: "问题反馈"},
+        ],
+    },
 ];
 
 function MenuContactComponent(props: MenuContactComponentProps) {
+    const {theme} = props;
+    
     return (
-        <Card title={"联系作者"} extra={<MailOutlined />}
+        <Card title={"帮助与反馈"} extra={<MailOutlined />}
               styles={{
                   root: {
                       backgroundColor: props.theme.secondaryColor,
@@ -36,17 +52,23 @@ function MenuContactComponent(props: MenuContactComponentProps) {
                       borderColor: props.theme.secondaryFontColor,
                   },
                   extra: {color: props.theme.secondaryFontColor}
-              }}
-        >
-            <Row gutter={[0, 8]}>
-                {contactLinks.map((link, index) => (
-                    <Col span={12} style={{textAlign: "center"}} key={index}>
-                        <HoverButton theme={props.theme} icon={link.icon} href={link.href}>
-                            {link.label}
-                        </HoverButton>
-                    </Col>
+              }}>
+            <Form layout="vertical"
+                  styles={{
+                      label: {color: theme.secondaryFontColor}
+                  }}>
+                {links.map((link) => (
+                    <Form.Item key={link.label} label={link.label}>
+                        <Space>
+                            {link.buttons.map((button, index) => (
+                                <HoverButton key={index} theme={theme} icon={button.icon} href={button.href} target={button.target}>
+                                    {button.text}
+                                </HoverButton>
+                            ))}
+                        </Space>
+                    </Form.Item>
                 ))}
-            </Row>
+            </Form>
         </Card>
     );
 }
