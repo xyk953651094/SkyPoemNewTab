@@ -69,10 +69,10 @@ function FocusComponent(props: FocusComponentProps) {
             stopSound();
             setFocusMode(false);
             setFocusSound("none");
-            themedMessage.info("已结束凝神");
+            themedMessage.info("已出静");
         } else {
             setFocusMode(true);
-            themedMessage.success("已开始凝神");
+            themedMessage.success("已入静");
         }
     }
 
@@ -84,12 +84,12 @@ function FocusComponent(props: FocusComponentProps) {
             stopSound();
             if (focusMode) {
                 setFocusMode(false);
-                themedMessage.info("已结束凝神");
+                themedMessage.info("已出静");
             }
         } else {
             if (!focusMode) {
                 setFocusMode(true);
-                themedMessage.success("已开始凝神");
+                themedMessage.success("已入静");
             }
             playSound(value);
         }
@@ -97,7 +97,7 @@ function FocusComponent(props: FocusComponentProps) {
 
     const popoverTitle = (
         <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
-            {"凝神"}
+            {"入静"}
         </Text>
     );
 
@@ -138,7 +138,7 @@ function FocusComponent(props: FocusComponentProps) {
                     color: props.theme.secondaryFontColor,
                 }}
             >
-                {focusMode ? "凝神中" : "未凝神"}
+                {focusMode ? "入静中" : "未入静"}
             </Button>
         </Popover>
     );

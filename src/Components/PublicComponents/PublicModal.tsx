@@ -26,7 +26,7 @@ export function PublicModal({theme, open, titleText, titleIcon, onOk, onCancel, 
                             {titleText}
                         </Text>
                     </Col>
-                    <Col span={12} style={{textAlign: "right"}}>
+                    <Col span={12} style={{color: theme.secondaryFontColor, fontSize: "16px", textAlign: "right"}}>
                         {titleIcon}
                     </Col>
                 </Row>
