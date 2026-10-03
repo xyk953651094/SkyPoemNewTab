@@ -194,7 +194,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             ]}
                         />
                     </Form.Item>
-                    <Form.Item label={"简洁模式"} extra={"开启后隐藏问候、天气、待办、倒数日和专注组件"}>
+                    <Form.Item label={"简洁模式"} extra={"开启后隐藏问候、天气、事目、计日和入静组件"}>
                         <Switch
                             checkedChildren="已开启"
                             unCheckedChildren="已关闭"
@@ -239,7 +239,11 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                 onOk={customThemeOkBtnOnClick}
                 onCancel={() => setActiveModal(null)}
             >
-                <Form colon={false}>
+                <Form colon={false}
+                      styles={{
+                          label: {color: props.theme.secondaryFontColor},
+                          extra: {color: props.theme.secondaryFontColor}
+                      }}>
                     <Form.Item label={"主要颜色"} extra={"影响背景颜色与按钮颜色"}>
                         <Space>
                             <ColorPicker value={customPrimaryColor}

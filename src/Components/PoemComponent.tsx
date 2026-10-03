@@ -62,10 +62,11 @@ function PoemComponent(props: PoemComponentProps) {
 
         setPoemContent(content);
         setPoemAuthor(truncateText(authorText, poemMaxSize));
-        setMatchTags(
-            raw?.data?.matchTags ??
-            (raw?.category ? raw.category.split("-").filter(Boolean) : [])
-        );
+        if (preference.poemSource === "smart") {
+            setMatchTags(raw?.data?.matchTags?.length > 0 ? raw.data.matchTags : []);
+        } else {
+            setMatchTags(raw?.category ? raw.category.split("-").filter(Boolean) : []);
+        }
     }
 
     // 防止连点：请求进行中忽略新的请求（用 ref 避免极快双击的状态竞态）
@@ -90,16 +91,10 @@ function PoemComponent(props: PoemComponentProps) {
         try {
             let result;
             if (preference.poemSource === "smart") {
-                try {
-                    const token = await getJinrishiciToken();
-                    result = await httpRequest("https://v2.jinrishici.com/sentence", {
-                        headers: {"X-User-Token": token}
-                    });
-                } catch (v2Error) {
-                    // v2 失败时回退到 v1（开发环境 CORS 不支持自定义 header 的预检）
-                    console.warn("v2 API 请求失败，回退到 v1:", v2Error);
-                    result = await httpRequest(`https://v1.jinrishici.com/${preference.poemTopic}`);
-                }
+                const token = await getJinrishiciToken();
+                result = await httpRequest("https://v2.jinrishici.com/sentence", {
+                    headers: {"X-User-Token": token}
+                });
             } else {
                 result = await httpRequest(`https://v1.jinrishici.com/${preference.poemTopic}`);
             }
@@ -201,7 +196,7 @@ function PoemComponent(props: PoemComponentProps) {
     return (
         <>
             <Flex vertical align="center" gap={8}>
-                {preference.poemSource === "smart" && matchTags.length > 0 && (
+                {matchTags.length > 0 && (
                     <Flex gap={4} wrap="wrap" justify="center">
                         {matchTags.map((tag, index) => (
                             <Tag key={index} style={{
