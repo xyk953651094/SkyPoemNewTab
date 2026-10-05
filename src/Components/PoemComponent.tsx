@@ -225,7 +225,7 @@ function PoemComponent(props: PoemComponentProps) {
                         // 冷却检查：防止频繁请求导致 API 降低诗词质量
                         const [lastRequestTime] = await getExtensionStorage(["lastPoemRequestTime"]);
                         if (lastRequestTime && Date.now() - lastRequestTime < manualRefreshCooldown) {
-                            themedMessage.error("操作过于频繁，请稍后再试");
+                            themedMessage.error("操作太频繁，请 5 分钟后再试");
                             return;
                         }
                         // 启用自定诗词时点"换一首"视为放弃自定诗词，先清空再请求随机诗词
