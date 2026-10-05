@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Card, ColorPicker, Divider, Form, message, Radio, RadioChangeEvent, Row, Select, Space, Switch, Typography} from "antd";
 import {BgColorsOutlined, RedoOutlined, SettingOutlined, StopOutlined} from "@ant-design/icons";
 import type {ColorPickerProps, GetProp} from "antd";
@@ -38,8 +38,18 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     const [customSvgColor0, setCustomSvgColor0] = useState<string>(theme.svgColors[0]);
     const [customSvgColor1, setCustomSvgColor1] = useState<string>(theme.svgColors[1]);
     const [customSvgColor2, setCustomSvgColor2] = useState<string>(theme.svgColors[2]);
-    
-     function refreshWindow() {
+
+    useEffect(() => {
+        if (activeModal === "customTheme") {
+            setCustomPrimaryColor(theme.primaryColor);
+            setCustomSecondaryColor(theme.secondaryColor);
+            setCustomSvgColor0(theme.svgColors[0]);
+            setCustomSvgColor1(theme.svgColors[1]);
+            setCustomSvgColor2(theme.svgColors[2]);
+        }
+    }, [activeModal, theme]);
+
+    function refreshWindow() {
         setTimeout(() => {
             window.location.reload();
         }, 1000);
@@ -88,14 +98,14 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
             }
         });
         themedMessage.success("已启用自定颜色，一秒后刷新页面");
-        setTimeout(() => window.location.reload(), 1000);
+        refreshWindow();
     }
 
     function disableCustomThemeBtnOnClick() {
         setActiveModal(null);
         updatePreference({customTheme: null});
         themedMessage.success("已关闭自定颜色，一秒后刷新页面");
-        setTimeout(() => window.location.reload(), 1000);
+        refreshWindow();
     }
     
     async function checkCooldownThen(callback: () => void) {
@@ -154,8 +164,8 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                   }}>
                 <Form layout={"vertical"} disabled={formDisabled}
                       styles={{
-                          label: {color: props.theme.secondaryFontColor},
-                          extra: {color: props.theme.secondaryFontColor}
+                          label: {color: theme.secondaryFontColor},
+                          extra: {color: theme.secondaryFontColor}
                       }}>
                     <Form.Item label={"诗词主题"} extra={preference.poemSource === "smart"
                         ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐，刷新间隔为 1 小时"
@@ -193,13 +203,13 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             ]}
                         />
                     </Form.Item>
-                    <Form.Item label={"自定颜色"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>
+                    <Form.Item label={"自定颜色（实验性功能，可能存在问题）"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>
                         <HoverButton theme={theme} icon={<BgColorsOutlined/>}
                                      onClick={() => setActiveModal("customTheme")}>
                             {"自定义插件主题颜色"}
                         </HoverButton>
                     </Form.Item>
-                    <Divider style={{borderColor: props.theme.secondaryFontColor}}/>
+                    <Divider style={{borderColor: theme.secondaryFontColor}}/>
                     <Form.Item label={"问候组件"} extra={"开启后展示问候组件"}>
                         <Switch
                             checkedChildren="已开启"
@@ -260,13 +270,13 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             }}
                         />
                     </Form.Item>
-                    <Divider style={{borderColor: props.theme.secondaryFontColor}}/>
+                    <Divider style={{borderColor: theme.secondaryFontColor}}/>
                     <Form.Item label={"危险设置"} extra={"出现异常时可尝试重置设置或插件"}>
                         <Space>
-                            <HoverButton theme={props.theme} icon={<RedoOutlined/>} onClick={resetPreferenceBtnOnClick}>
+                            <HoverButton theme={theme} icon={<RedoOutlined/>} onClick={resetPreferenceBtnOnClick}>
                                 重置设置
                             </HoverButton>
-                            <HoverButton theme={props.theme} icon={<RedoOutlined/>} onClick={clearStorageBtnOnClick}>
+                            <HoverButton theme={theme} icon={<RedoOutlined/>} onClick={clearStorageBtnOnClick}>
                                 重置插件
                             </HoverButton>
                         </Space>
@@ -285,8 +295,8 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
             >
                 <Form colon={false}
                       styles={{
-                          label: {color: props.theme.secondaryFontColor},
-                          extra: {color: props.theme.secondaryFontColor}
+                          label: {color: theme.secondaryFontColor},
+                          extra: {color: theme.secondaryFontColor}
                       }}>
                     <Form.Item label={"主要颜色"} extra={"影响背景颜色与按钮颜色"}>
                         <Space>
@@ -315,33 +325,33 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                 {customThemeState && (
                     <Row justify="center">
                         <HoverButton theme={theme} icon={<StopOutlined/>} onClick={disableCustomThemeBtnOnClick}>
-                            {"恢复默认主题颜色"}
+                            {"恢复默认随机主题颜色"}
                         </HoverButton>
                     </Row>
                 )}
             </PublicModal>
 
             <PublicModal
-                theme={props.theme}
+                theme={theme}
                 open={activeModal === "resetPreference"}
                 titleText={"确定重置设置？"}
-                titleIcon={<RedoOutlined style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}/>}
+                titleIcon={<RedoOutlined style={{color: theme.secondaryFontColor, fontSize: "16px"}}/>}
                 onOk={resetPreferenceOkBtnOnClick}
                 onCancel={resetPreferenceCancelBtnOnClick}
             >
-                <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
+                <Text style={{color: theme.secondaryFontColor, fontSize: "16px"}}>
                     {"将设置项重置为默认值"}
                 </Text>
             </PublicModal>
             <PublicModal
-                theme={props.theme}
+                theme={theme}
                 open={activeModal === "clearStorage"}
                 titleText={"确定重置插件？"}
-                titleIcon={<RedoOutlined style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}/>}
+                titleIcon={<RedoOutlined style={{color: theme.secondaryFontColor, fontSize: "16px"}}/>}
                 onOk={clearStorageOkBtnOnClick}
                 onCancel={clearStorageCancelBtnOnClick}
             >
-                <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
+                <Text style={{color: theme.secondaryFontColor, fontSize: "16px"}}>
                     {"将设置项重置为默认值，并删除其他数据"}
                 </Text>
             </PublicModal>

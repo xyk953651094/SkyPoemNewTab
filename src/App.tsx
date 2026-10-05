@@ -35,14 +35,6 @@ function App() {
             svgColors: value.svgColors
         };
         setTheme(newTheme);
-        // 持久化主题色供刷新后恢复；自定颜色存在 preference.customTheme，不写入此处以免取消后残留
-        if (!preference.customTheme) {
-            setExtensionStorage("theme", {
-                primaryColor: newTheme.primaryColor,
-                secondaryColor: newTheme.secondaryColor,
-                svgColors: newTheme.svgColors
-            });
-        }
     }
 
     // 仅在组件挂载时从 storage 加载偏好与主题
