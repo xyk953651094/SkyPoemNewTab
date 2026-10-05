@@ -72,10 +72,9 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
         themedMessage.success("已更换字体类型");
     }
 
-    // 简洁模式
-    function simpleModeSwitchOnChange(checked: boolean) {
-        updatePreference({simpleMode: checked});
-        themedMessage.success(checked ? "已开启简洁模式" : "已关闭简洁模式");
+    // 组件显示
+    function componentSwitchOnChange(key: "showGreet" | "showWeather" | "showTodo" | "showCountdown" | "showFocus", checked: boolean) {
+        updatePreference({[key]: checked});
     }
 
     // 自定颜色
@@ -159,7 +158,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                           extra: {color: props.theme.secondaryFontColor}
                       }}>
                     <Form.Item label={"诗词主题"} extra={preference.poemSource === "smart"
-                        ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐"
+                        ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐，刷新间隔为 1 小时"
                         : ""}>
                         <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
                                      value={preference.poemSource}
@@ -170,7 +169,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                                      ]}/>
                     </Form.Item>
                     {preference.poemSource === "preset" && (
-                        <Form.Item label={"预设主题"} extra={"下次刷新诗词时生效"}>
+                        <Form.Item label={"预设主题"} extra={"下次刷新诗词时生效，刷新间隔为 1 小时"}>
                             <Select
                                 style={{width: "100%"}}
                                 value={preference.poemTopic}
@@ -194,27 +193,72 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             ]}
                         />
                     </Form.Item>
-                    <Form.Item label={"简洁模式"} extra={"开启后隐藏问候、天气、事目、计日和入静组件"}>
-                        <Switch
-                            checkedChildren="已开启"
-                            unCheckedChildren="已关闭"
-                            checked={preference.simpleMode}
-                            onChange={simpleModeSwitchOnChange}
-                            styles={{
-                                root: {
-                                    backgroundColor: preference.simpleMode ? theme.primaryColor : ""
-                                },
-                                content: {
-                                    color: preference.simpleMode ? theme.primaryFontColor : ""
-                                }
-                            }}
-                        />
-                    </Form.Item>
                     <Form.Item label={"自定颜色"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>
                         <HoverButton theme={theme} icon={<BgColorsOutlined/>}
                                      onClick={() => setActiveModal("customTheme")}>
                             {"自定义插件主题颜色"}
                         </HoverButton>
+                    </Form.Item>
+                    <Divider style={{borderColor: props.theme.secondaryFontColor}}/>
+                    <Form.Item label={"问候组件"} extra={"开启后展示问候组件"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showGreet}
+                            onChange={(checked) => componentSwitchOnChange("showGreet", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showGreet ? theme.primaryColor : ""},
+                                content: {color: preference.showGreet ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"天气组件"} extra={"开启后展示天气组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showWeather}
+                            onChange={(checked) => componentSwitchOnChange("showWeather", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showWeather ? theme.primaryColor : ""},
+                                content: {color: preference.showWeather ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"事目组件"} extra={"开启后展示事目组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showTodo}
+                            onChange={(checked) => componentSwitchOnChange("showTodo", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showTodo ? theme.primaryColor : ""},
+                                content: {color: preference.showTodo ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"计日组件"} extra={"开启后展示计日组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showCountdown}
+                            onChange={(checked) => componentSwitchOnChange("showCountdown", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showCountdown ? theme.primaryColor : ""},
+                                content: {color: preference.showCountdown ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"入静组件"} extra={"开启后展示入静组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showFocus}
+                            onChange={(checked) => componentSwitchOnChange("showFocus", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showFocus ? theme.primaryColor : ""},
+                                content: {color: preference.showFocus ? theme.primaryFontColor : ""}
+                            }}
+                        />
                     </Form.Item>
                     <Divider style={{borderColor: props.theme.secondaryFontColor}}/>
                     <Form.Item label={"危险设置"} extra={"出现异常时可尝试重置设置或插件"}>

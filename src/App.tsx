@@ -117,11 +117,11 @@ function App() {
                     <Row justify={"center"}>
                         <Col span={20} style={{textAlign: "right"}}>
                             <Space align={"center"}>
-                                {!preference.simpleMode && <GreetComponent theme={theme}/>}
-                                {!preference.simpleMode && <WeatherComponent theme={theme}/>}
-                                {!preference.simpleMode && <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>}
-                                {!preference.simpleMode && <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>}
-                                {!preference.simpleMode && <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {preference.showGreet && <GreetComponent theme={theme}/>}
+                                {preference.showWeather && <WeatherComponent theme={theme}/>}
+                                {preference.showTodo && <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {preference.showCountdown && <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {preference.showFocus && <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>}
                                 <MenuComponent
                                     theme={theme}
                                     preference={preference}

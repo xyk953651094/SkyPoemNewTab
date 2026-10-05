@@ -3,7 +3,6 @@ import {Button, Drawer, Row, Space, Tooltip} from "antd";
 import {MenuFoldOutlined, StarOutlined, ToTopOutlined} from "@ant-design/icons";
 import {deviceType} from "../TypeScripts/PublicConstants";
 import MenuInfoComponent from "./MenuComponents/MenuInfoComponent";
-import MenuContactComponent from "./MenuComponents/MenuContactComponent";
 import MenuPreferenceComponent from "./MenuComponents/MenuPreferenceComponent";
 import {PreferenceInterface, ThemeInterface} from "../TypeScripts/PublicInterface";
 import {HoverButton} from "./PublicComponents/PublicButton";
@@ -78,7 +77,6 @@ function MenuComponent(props: MenuComponentProps) {
                         preference={props.preference}
                         getPreference={props.getPreference}/>
                     <MenuInfoComponent theme={props.theme}/>
-                    <MenuContactComponent theme={props.theme}/>
                     <Row justify={"center"}>
                         <HoverButton theme={props.theme} icon={<ToTopOutlined/>} onClick={scrollToTop}>
                             {"回到顶部"}

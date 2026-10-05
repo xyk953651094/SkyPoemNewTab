@@ -108,6 +108,18 @@ export async function clearExtensionStorage() {
 export function fixPreference(preference: PreferenceInterface): PreferenceInterface {
     let isFixed = false;
 
+    // 旧版 simpleMode 迁移为 5 个独立字段
+    if ("simpleMode" in (preference as any)) {
+        const wasSimple = !(preference as any).simpleMode;
+        (preference as any).showGreet = wasSimple;
+        (preference as any).showWeather = wasSimple;
+        (preference as any).showTodo = wasSimple;
+        (preference as any).showCountdown = wasSimple;
+        (preference as any).showFocus = wasSimple;
+        delete (preference as any).simpleMode;
+        isFixed = true;
+    }
+
     for (const [key, defaultValue] of Object.entries(defaultPreference)) {
         if ((preference as any)[key] === undefined || (preference as any)[key] === null) {
             (preference as any)[key] = defaultValue;
