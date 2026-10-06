@@ -3,7 +3,6 @@ import {Button, Drawer, Row, Space, Tooltip} from "antd";
 import {MenuFoldOutlined, StarOutlined, ToTopOutlined} from "@ant-design/icons";
 import {deviceType} from "../TypeScripts/PublicConstants";
 import MenuInfoComponent from "./MenuComponents/MenuInfoComponent";
-import MenuContactComponent from "./MenuComponents/MenuContactComponent";
 import MenuPreferenceComponent from "./MenuComponents/MenuPreferenceComponent";
 import {PreferenceInterface, ThemeInterface} from "../TypeScripts/PublicInterface";
 import {HoverButton} from "./PublicComponents/PublicButton";
@@ -53,7 +52,7 @@ function MenuComponent(props: MenuComponentProps) {
             <Tooltip title={"菜单栏"} placement={"bottom"} color={props.theme.secondaryColor} styles={{
                 container: {color: props.theme.secondaryFontColor},
             }}>
-                <Button icon={<MenuFoldOutlined />} size={"large"} type={"primary"} className={"floatingButton"}
+                <Button icon={<MenuFoldOutlined/>} size={"large"} type={"primary"} className={"floatingButton"}
                         onClick={showDrawerBtnOnClick}
                         style={buttonStyle}
                 />
@@ -72,13 +71,12 @@ function MenuComponent(props: MenuComponentProps) {
                     </HoverButton>
                 }
             >
-                <Space orientation={"vertical"} size={"large"} ref={drawerContentRef}>
+                <Space orientation={"vertical"} size={"large"} ref={drawerContentRef} style={{width: "375px"}}>
                     <MenuPreferenceComponent
                         theme={props.theme}
                         preference={props.preference}
                         getPreference={props.getPreference}/>
                     <MenuInfoComponent theme={props.theme}/>
-                    <MenuContactComponent theme={props.theme}/>
                     <Row justify={"center"}>
                         <HoverButton theme={props.theme} icon={<ToTopOutlined/>} onClick={scrollToTop}>
                             {"回到顶部"}

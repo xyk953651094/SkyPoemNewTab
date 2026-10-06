@@ -35,14 +35,6 @@ function App() {
             svgColors: value.svgColors
         };
         setTheme(newTheme);
-        // 持久化主题色供刷新后恢复；自定颜色存在 preference.customTheme，不写入此处以免取消后残留
-        if (!preference.customTheme) {
-            setExtensionStorage("theme", {
-                primaryColor: newTheme.primaryColor,
-                secondaryColor: newTheme.secondaryColor,
-                svgColors: newTheme.svgColors
-            });
-        }
     }
 
     // 仅在组件挂载时从 storage 加载偏好与主题
@@ -117,11 +109,11 @@ function App() {
                     <Row justify={"center"}>
                         <Col span={20} style={{textAlign: "right"}}>
                             <Space align={"center"}>
-                                {!preference.simpleMode && <GreetComponent theme={theme}/>}
-                                {!preference.simpleMode && <WeatherComponent theme={theme}/>}
-                                {!preference.simpleMode && <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>}
-                                {!preference.simpleMode && <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>}
-                                {!preference.simpleMode && <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {preference.showGreet && <GreetComponent theme={theme}/>}
+                                {preference.showWeather && <WeatherComponent theme={theme}/>}
+                                {preference.showTodo && <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {preference.showCountdown && <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {preference.showFocus && <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>}
                                 <MenuComponent
                                     theme={theme}
                                     preference={preference}

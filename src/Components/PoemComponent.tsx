@@ -102,7 +102,17 @@ function PoemComponent(props: PoemComponentProps) {
             await setExtensionStorage("lastPoemRequestTime", Date.now());
             await setExtensionStorage("lastPoem", result);
 
-            getTheme(preference.customTheme ?? setTheme());
+            if (preference.customTheme) {
+                getTheme(preference.customTheme);
+            } else {
+                const randomTheme = setTheme();
+                getTheme(randomTheme);
+                setExtensionStorage("theme", {
+                    primaryColor: randomTheme.primaryColor,
+                    secondaryColor: randomTheme.secondaryColor,
+                    svgColors: randomTheme.svgColors
+                });
+            }
             applyPoem(result);
         } catch {
             const [lastPoem] = await getExtensionStorage(["lastPoem"]);
@@ -163,8 +173,17 @@ function PoemComponent(props: PoemComponentProps) {
             const [customPoemStorage] = await getExtensionStorage(["customPoem"]);
             if (customPoemStorage) {
                 setCustomPoem(true);
-                // 自定诗词无网络请求，每次开标签页换一次主题色（自定颜色开启时 setTheme 结果被 customTheme 覆盖）
-                getTheme(preference.customTheme ?? setTheme());
+                if (preference.customTheme) {
+                    getTheme(preference.customTheme);
+                } else {
+                    const randomTheme = setTheme();
+                    getTheme(randomTheme);
+                    setExtensionStorage("theme", {
+                        primaryColor: randomTheme.primaryColor,
+                        secondaryColor: randomTheme.secondaryColor,
+                        svgColors: randomTheme.svgColors
+                    });
+                }
                 const [customContent, customAuthor] = await getExtensionStorage(["customPoemContent", "customPoemAuthor"]);
                 if (customContent && customAuthor) {
                     setPoemContent(customContent);
@@ -225,7 +244,7 @@ function PoemComponent(props: PoemComponentProps) {
                         // 冷却检查：防止频繁请求导致 API 降低诗词质量
                         const [lastRequestTime] = await getExtensionStorage(["lastPoemRequestTime"]);
                         if (lastRequestTime && Date.now() - lastRequestTime < manualRefreshCooldown) {
-                            themedMessage.error("操作过于频繁，请稍后再试");
+                            themedMessage.error("操作太频繁，请 5 分钟后再试");
                             return;
                         }
                         // 启用自定诗词时点"换一首"视为放弃自定诗词，先清空再请求随机诗词

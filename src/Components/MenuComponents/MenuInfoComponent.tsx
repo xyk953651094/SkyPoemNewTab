@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, Form, Space} from "antd";
-import {GithubOutlined, GitlabOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import {DislikeOutlined, GithubOutlined, GitlabOutlined, InfoCircleOutlined, LikeOutlined} from "@ant-design/icons";
 import {ThemeInterface} from "../../TypeScripts/PublicInterface";
 import {HoverButton} from "../PublicComponents/PublicButton";
 
@@ -27,10 +27,17 @@ const links: LinkItem[] = [
         ],
     },
     {
-        label: "作者主页",
+        label: "帮助文档",
         buttons: [
-            {icon: <GithubOutlined/>, href: "https://github.com/xyk953651094/", target: "_blank", text: "Github"},
-            {icon: <GitlabOutlined/>, href: "https://gitlab.com/xyk953651094/", target: "_blank", text: "Gitlab"},
+            {icon: <GithubOutlined/>, href: "https://xyk953651094.github.io/SkyDocuments/", target: "_blank", text: "Github"},
+            {icon: <GitlabOutlined/>, href: "https://xyk953651094.gitlab.io/SkyDocuments/", target: "_blank", text: "Gitlab"},
+        ],
+    },
+    {
+        label: "建议反馈",
+        buttons: [
+            {icon: <LikeOutlined/>, href: "mailto:xyk953651094@qq.com?&subject=云开诗词新标签页-功能建议", text: "功能建议"},
+            {icon: <DislikeOutlined/>, href: "mailto:xyk953651094@qq.com?&subject=云开诗词新标签页-问题反馈", text: "问题反馈"},
         ],
     },
 ];

@@ -13,7 +13,11 @@ export interface CustomThemeInterface {
 }
 
 export interface PreferenceInterface {
-    simpleMode: boolean;
+    showGreet: boolean;
+    showWeather: boolean;
+    showTodo: boolean;
+    showCountdown: boolean;
+    showFocus: boolean;
     poemSource: "smart" | "preset",
     poemTopic: string,
     fontFamily: "LXGWWenKai" | "LXGWWenKaiTC" | "LXGWMarkerGothic",

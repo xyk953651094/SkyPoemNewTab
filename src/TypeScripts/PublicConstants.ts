@@ -8,7 +8,11 @@ export const colorRegExp = /^#[0-9A-Fa-f]{6}$/;
 export const poemSwitchingInterval = 3600000;  // 图片切换间隔默认一小时 3600000
 
 export const defaultPreference: PreferenceInterface = {
-    simpleMode: false,
+    showGreet: true,
+    showWeather: true,
+    showTodo: true,
+    showCountdown: true,
+    showFocus: true,
     poemSource: "preset",
     poemTopic: "all",
     fontFamily: "LXGWWenKai",

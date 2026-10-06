@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Card, ColorPicker, Divider, Form, message, Radio, RadioChangeEvent, Row, Select, Space, Switch, Typography} from "antd";
 import {BgColorsOutlined, RedoOutlined, SettingOutlined, StopOutlined} from "@ant-design/icons";
 import type {ColorPickerProps, GetProp} from "antd";
@@ -38,8 +38,18 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
     const [customSvgColor0, setCustomSvgColor0] = useState<string>(theme.svgColors[0]);
     const [customSvgColor1, setCustomSvgColor1] = useState<string>(theme.svgColors[1]);
     const [customSvgColor2, setCustomSvgColor2] = useState<string>(theme.svgColors[2]);
-    
-     function refreshWindow() {
+
+    useEffect(() => {
+        if (activeModal === "customTheme") {
+            setCustomPrimaryColor(theme.primaryColor);
+            setCustomSecondaryColor(theme.secondaryColor);
+            setCustomSvgColor0(theme.svgColors[0]);
+            setCustomSvgColor1(theme.svgColors[1]);
+            setCustomSvgColor2(theme.svgColors[2]);
+        }
+    }, [activeModal, theme]);
+
+    function refreshWindow() {
         setTimeout(() => {
             window.location.reload();
         }, 1000);
@@ -72,10 +82,9 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
         themedMessage.success("已更换字体类型");
     }
 
-    // 简洁模式
-    function simpleModeSwitchOnChange(checked: boolean) {
-        updatePreference({simpleMode: checked});
-        themedMessage.success(checked ? "已开启简洁模式" : "已关闭简洁模式");
+    // 组件显示
+    function componentSwitchOnChange(key: "showGreet" | "showWeather" | "showTodo" | "showCountdown" | "showFocus", checked: boolean) {
+        updatePreference({[key]: checked});
     }
 
     // 自定颜色
@@ -89,14 +98,14 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
             }
         });
         themedMessage.success("已启用自定颜色，一秒后刷新页面");
-        setTimeout(() => window.location.reload(), 1000);
+        refreshWindow();
     }
 
     function disableCustomThemeBtnOnClick() {
         setActiveModal(null);
         updatePreference({customTheme: null});
         themedMessage.success("已关闭自定颜色，一秒后刷新页面");
-        setTimeout(() => window.location.reload(), 1000);
+        refreshWindow();
     }
     
     async function checkCooldownThen(callback: () => void) {
@@ -155,22 +164,39 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                   }}>
                 <Form layout={"vertical"} disabled={formDisabled}
                       styles={{
-                          label: {color: props.theme.secondaryFontColor},
-                          extra: {color: props.theme.secondaryFontColor}
+                          label: {color: theme.secondaryFontColor},
+                          extra: {color: theme.secondaryFontColor}
                       }}>
                     <Form.Item label={"诗词主题"} extra={preference.poemSource === "smart"
-                        ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐"
+                        ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐，刷新间隔为 1 小时"
                         : ""}>
+                        {/*<Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}*/}
+                        {/*             value={preference.poemSource}*/}
+                        {/*             onChange={poemSourceRadioOnChange}*/}
+                        {/*             styles: {{*/}
+                        {/*                 icon: {color: props.theme.primaryColor},*/}
+                        {/*                 label: {color: props.theme.secondaryFontColor}*/}
+                        {/*             }}*/}
+                        {/*             options={[*/}
+                        {/*                 {value: "smart", label: "智能主题"},*/}
+                        {/*                 {value: "preset", label: "预设主题"}*/}
+                        {/*             ]}/>*/}
                         <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
                                      value={preference.poemSource}
                                      onChange={poemSourceRadioOnChange}
-                                     options={[
-                                         {value: "smart", label: "智能主题", style: {color: theme.secondaryFontColor}},
-                                         {value: "preset", label: "预设主题", style: {color: theme.secondaryFontColor}}
-                                     ]}/>
+                                     >
+                            <Radio value={"smart"} styles={{
+                                icon: {backgroundColor: preference.poemSource === "smart" ? props.theme.primaryColor : undefined},
+                                label: {color: props.theme.secondaryFontColor}
+                            }}>{"智能主题"}</Radio>
+                            <Radio value={"preset"} styles={{
+                                icon: {backgroundColor: preference.poemSource === "preset" ? props.theme.primaryColor : undefined},
+                                label: {color: props.theme.secondaryFontColor}
+                            }}>{"预设主题"}</Radio>
+                        </Radio.Group>
                     </Form.Item>
                     {preference.poemSource === "preset" && (
-                        <Form.Item label={"预设主题"} extra={"下次刷新诗词时生效"}>
+                        <Form.Item label={"预设主题"} extra={"下次刷新诗词时生效，刷新间隔为 1 小时"}>
                             <Select
                                 style={{width: "100%"}}
                                 value={preference.poemTopic}
@@ -194,35 +220,80 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             ]}
                         />
                     </Form.Item>
-                    <Form.Item label={"简洁模式"} extra={"开启后隐藏问候、天气、事目、计日和入静组件"}>
-                        <Switch
-                            checkedChildren="已开启"
-                            unCheckedChildren="已关闭"
-                            checked={preference.simpleMode}
-                            onChange={simpleModeSwitchOnChange}
-                            styles={{
-                                root: {
-                                    backgroundColor: preference.simpleMode ? theme.primaryColor : ""
-                                },
-                                content: {
-                                    color: preference.simpleMode ? theme.primaryFontColor : ""
-                                }
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label={"自定颜色"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>
+                    <Form.Item label={"自定颜色（实验性功能，可能存在问题）"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>
                         <HoverButton theme={theme} icon={<BgColorsOutlined/>}
                                      onClick={() => setActiveModal("customTheme")}>
                             {"自定义插件主题颜色"}
                         </HoverButton>
                     </Form.Item>
-                    <Divider style={{borderColor: props.theme.secondaryFontColor}}/>
+                    <Divider style={{borderColor: theme.secondaryFontColor}}/>
+                    <Form.Item label={"问候组件"} extra={"开启后展示问候组件"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showGreet}
+                            onChange={(checked) => componentSwitchOnChange("showGreet", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showGreet ? theme.primaryColor : ""},
+                                content: {color: preference.showGreet ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"天气组件"} extra={"开启后展示天气组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showWeather}
+                            onChange={(checked) => componentSwitchOnChange("showWeather", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showWeather ? theme.primaryColor : ""},
+                                content: {color: preference.showWeather ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"事目组件"} extra={"开启后展示事目组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showTodo}
+                            onChange={(checked) => componentSwitchOnChange("showTodo", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showTodo ? theme.primaryColor : ""},
+                                content: {color: preference.showTodo ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"计日组件"} extra={"开启后展示计日组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showCountdown}
+                            onChange={(checked) => componentSwitchOnChange("showCountdown", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showCountdown ? theme.primaryColor : ""},
+                                content: {color: preference.showCountdown ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={"入静组件"} extra={"开启后展示入静组件，关闭则隐藏"}>
+                        <Switch
+                            checkedChildren="已开启"
+                            unCheckedChildren="已关闭"
+                            checked={preference.showFocus}
+                            onChange={(checked) => componentSwitchOnChange("showFocus", checked)}
+                            styles={{
+                                root: {backgroundColor: preference.showFocus ? theme.primaryColor : ""},
+                                content: {color: preference.showFocus ? theme.primaryFontColor : ""}
+                            }}
+                        />
+                    </Form.Item>
+                    <Divider style={{borderColor: theme.secondaryFontColor}}/>
                     <Form.Item label={"危险设置"} extra={"出现异常时可尝试重置设置或插件"}>
                         <Space>
-                            <HoverButton theme={props.theme} icon={<RedoOutlined/>} onClick={resetPreferenceBtnOnClick}>
+                            <HoverButton theme={theme} icon={<RedoOutlined/>} onClick={resetPreferenceBtnOnClick}>
                                 重置设置
                             </HoverButton>
-                            <HoverButton theme={props.theme} icon={<RedoOutlined/>} onClick={clearStorageBtnOnClick}>
+                            <HoverButton theme={theme} icon={<RedoOutlined/>} onClick={clearStorageBtnOnClick}>
                                 重置插件
                             </HoverButton>
                         </Space>
@@ -241,8 +312,8 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
             >
                 <Form colon={false}
                       styles={{
-                          label: {color: props.theme.secondaryFontColor},
-                          extra: {color: props.theme.secondaryFontColor}
+                          label: {color: theme.secondaryFontColor},
+                          extra: {color: theme.secondaryFontColor}
                       }}>
                     <Form.Item label={"主要颜色"} extra={"影响背景颜色与按钮颜色"}>
                         <Space>
@@ -271,33 +342,33 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                 {customThemeState && (
                     <Row justify="center">
                         <HoverButton theme={theme} icon={<StopOutlined/>} onClick={disableCustomThemeBtnOnClick}>
-                            {"恢复默认主题颜色"}
+                            {"恢复默认随机主题颜色"}
                         </HoverButton>
                     </Row>
                 )}
             </PublicModal>
 
             <PublicModal
-                theme={props.theme}
+                theme={theme}
                 open={activeModal === "resetPreference"}
                 titleText={"确定重置设置？"}
-                titleIcon={<RedoOutlined style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}/>}
+                titleIcon={<RedoOutlined style={{color: theme.secondaryFontColor, fontSize: "16px"}}/>}
                 onOk={resetPreferenceOkBtnOnClick}
                 onCancel={resetPreferenceCancelBtnOnClick}
             >
-                <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
+                <Text style={{color: theme.secondaryFontColor, fontSize: "16px"}}>
                     {"将设置项重置为默认值"}
                 </Text>
             </PublicModal>
             <PublicModal
-                theme={props.theme}
+                theme={theme}
                 open={activeModal === "clearStorage"}
                 titleText={"确定重置插件？"}
-                titleIcon={<RedoOutlined style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}/>}
+                titleIcon={<RedoOutlined style={{color: theme.secondaryFontColor, fontSize: "16px"}}/>}
                 onOk={clearStorageOkBtnOnClick}
                 onCancel={clearStorageCancelBtnOnClick}
             >
-                <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
+                <Text style={{color: theme.secondaryFontColor, fontSize: "16px"}}>
                     {"将设置项重置为默认值，并删除其他数据"}
                 </Text>
             </PublicModal>

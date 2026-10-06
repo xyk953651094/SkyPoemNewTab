@@ -96,7 +96,7 @@ function GreetComponent(props: GreetComponentProps) {
     }, []);
     
     return (
-        <Tooltip title={"更多信息"} placement={"bottom"} color={props.theme.secondaryColor} styles={{
+        <Tooltip title={"点击查看更多信息"} placement={"bottom"} color={props.theme.secondaryColor} styles={{
             container: {color: props.theme.secondaryFontColor},
         }}>
             <Button
