@@ -170,13 +170,30 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                     <Form.Item label={"诗词主题"} extra={preference.poemSource === "smart"
                         ? "智能诗词会根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐，刷新间隔为 1 小时"
                         : ""}>
+                        {/*<Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}*/}
+                        {/*             value={preference.poemSource}*/}
+                        {/*             onChange={poemSourceRadioOnChange}*/}
+                        {/*             styles: {{*/}
+                        {/*                 icon: {color: props.theme.primaryColor},*/}
+                        {/*                 label: {color: props.theme.secondaryFontColor}*/}
+                        {/*             }}*/}
+                        {/*             options={[*/}
+                        {/*                 {value: "smart", label: "智能主题"},*/}
+                        {/*                 {value: "preset", label: "预设主题"}*/}
+                        {/*             ]}/>*/}
                         <Radio.Group buttonStyle={"solid"} size={"large"} style={{width: "100%"}}
                                      value={preference.poemSource}
                                      onChange={poemSourceRadioOnChange}
-                                     options={[
-                                         {value: "smart", label: "智能主题", style: {color: theme.secondaryFontColor}},
-                                         {value: "preset", label: "预设主题", style: {color: theme.secondaryFontColor}}
-                                     ]}/>
+                                     >
+                            <Radio value={"smart"} styles={{
+                                icon: {backgroundColor: preference.poemSource === "smart" ? props.theme.primaryColor : undefined},
+                                label: {color: props.theme.secondaryFontColor}
+                            }}>{"智能主题"}</Radio>
+                            <Radio value={"preset"} styles={{
+                                icon: {backgroundColor: preference.poemSource === "preset" ? props.theme.primaryColor : undefined},
+                                label: {color: props.theme.secondaryFontColor}
+                            }}>{"预设主题"}</Radio>
+                        </Radio.Group>
                     </Form.Item>
                     {preference.poemSource === "preset" && (
                         <Form.Item label={"预设主题"} extra={"下次刷新诗词时生效，刷新间隔为 1 小时"}>

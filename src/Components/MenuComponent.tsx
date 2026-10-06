@@ -52,7 +52,7 @@ function MenuComponent(props: MenuComponentProps) {
             <Tooltip title={"菜单栏"} placement={"bottom"} color={props.theme.secondaryColor} styles={{
                 container: {color: props.theme.secondaryFontColor},
             }}>
-                <Button icon={<MenuFoldOutlined />} size={"large"} type={"primary"} className={"floatingButton"}
+                <Button icon={<MenuFoldOutlined/>} size={"large"} type={"primary"} className={"floatingButton"}
                         onClick={showDrawerBtnOnClick}
                         style={buttonStyle}
                 />
@@ -71,7 +71,7 @@ function MenuComponent(props: MenuComponentProps) {
                     </HoverButton>
                 }
             >
-                <Space orientation={"vertical"} size={"large"} ref={drawerContentRef}>
+                <Space orientation={"vertical"} size={"large"} ref={drawerContentRef} style={{width: "375px"}}>
                     <MenuPreferenceComponent
                         theme={props.theme}
                         preference={props.preference}
