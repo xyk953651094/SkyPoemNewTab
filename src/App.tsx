@@ -78,7 +78,7 @@ function App() {
                 notification.open({
                     icon: null,
                     title: "已更新至版本 V" + currentVersion,
-                    description: "新增：字体切换、简洁模式、更新提醒等功能",
+                    description: "修复已知问题，提升使用体验",
                     placement: "bottomLeft",
                     duration: 10,
                     styles : {
