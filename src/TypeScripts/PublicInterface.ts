@@ -18,6 +18,7 @@ export interface PreferenceInterface {
     showTodo: boolean;
     showCountdown: boolean;
     showFocus: boolean;
+    showQuickLink: boolean;
     poemSource: "smart" | "preset",
     poemTopic: string,
     fontFamily: "LXGWWenKai" | "LXGWWenKaiTC" | "LXGWMarkerGothic",

@@ -13,6 +13,7 @@ export const defaultPreference: PreferenceInterface = {
     showTodo: true,
     showCountdown: true,
     showFocus: true,
+    showQuickLink: true,
     poemSource: "preset",
     poemTopic: "all",
     fontFamily: "LXGWWenKai",

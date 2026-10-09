@@ -41,8 +41,8 @@ function PoemComponent(props: PoemComponentProps) {
     const {theme, preference, getTheme} = props;
 
     const [displayModal, setDisplayModal] = useState(false);
-    const [poemContent, setPoemContent] = useState("海上生明月，天涯共此时。");
-    const [poemAuthor, setPoemAuthor] = useState("张九龄 · <望月怀远>");
+    const [poemContent, setPoemContent] = useState("守得云开见月明。");
+    const [poemAuthor, setPoemAuthor] = useState("施耐庵 · <水浒传>");
     const [matchTags, setMatchTags] = useState<string[]>([]);
     const [customPoem, setCustomPoem] = useState(false);
     const [customContentInputValue, setCustomContentInputValue] = useState("");

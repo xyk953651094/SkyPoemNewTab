@@ -10,6 +10,7 @@ import PoemComponent from "./Components/PoemComponent";
 import TodoComponent from "./Components/TodoComponent";
 import DailyComponent from "./Components/CountdownComponent";
 import FocusComponent from "./Components/FocusComponent";
+import QuickLinkComponent from "./Components/QuickLinkComponent";
 import MenuComponent from "./Components/MenuComponent";
 import SunComponent from "./Components/SunComponent";
 import WaveComponent from "./Components/WaveComponent";
@@ -114,6 +115,7 @@ function App() {
                                 {preference.showTodo && <TodoComponent theme={theme} fontFamily={preference.fontFamily}/>}
                                 {preference.showCountdown && <DailyComponent theme={theme} fontFamily={preference.fontFamily}/>}
                                 {preference.showFocus && <FocusComponent theme={theme} fontFamily={preference.fontFamily}/>}
+                                {preference.showQuickLink && <QuickLinkComponent theme={theme}/>}
                                 <MenuComponent
                                     theme={theme}
                                     preference={preference}
