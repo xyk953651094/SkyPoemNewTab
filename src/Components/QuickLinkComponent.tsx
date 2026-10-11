@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {
     Button,
     Col,
-    Divider,
     Empty,
     Flex,
     Input,
@@ -17,10 +16,10 @@ import {ThemeInterface} from "../TypeScripts/PublicInterface";
 import {getExtensionStorage, setExtensionStorage, removeExtensionStorage} from "../TypeScripts/StorageFunctions";
 import {HoverButton} from "./PublicComponents/PublicButton";
 import {PublicModal} from "./PublicComponents/PublicModal";
+import "../StyleSheets/QuickLinkComponent.scss";
 
 const {Text} = Typography;
 const QUICK_LINK_MAX_SIZE = 5;
-
 const STORAGE_KEY_QUICK_LINKS = "quickLinks";
 
 interface QuickLinkItem {
@@ -85,15 +84,10 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
         themedMessage.success("添加成功");
     }
 
-    function openLink(url: string) {
-        window.open(url, "_blank");
-    }
-
     useEffect(() => {
         async function loadFromStorage() {
             const [storedLinks] = await getExtensionStorage([STORAGE_KEY_QUICK_LINKS]);
-            const parsedLinks: QuickLinkItem[] = storedLinks ?? [];
-            setLinkList(parsedLinks);
+            setLinkList(storedLinks ?? []);
         }
 
         loadFromStorage();
@@ -115,32 +109,29 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
     );
 
     const popoverContent = (
-        <Flex vertical gap="middle">
+        <Flex wrap="wrap" gap="small" style={linkList.length === 0 ? {minHeight: "100px", alignContent: "center", justifyContent: "center"} : undefined}>
             {linkList.length === 0 ? (
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                     styles={{description: {color: props.theme.secondaryFontColor}}}
                 />
             ) : (
-                linkList.map((item: QuickLinkItem, index: number) => (
-                    <React.Fragment key={item.timeStamp}>
-                        <Flex justify="space-between" align="center">
-                            <HoverButton
-                                theme={props.theme}
-                                onClick={() => openLink(item.url)}
-                            >
-                                {"点击前往 " + item.name}
-                            </HoverButton>
-                            <HoverButton
-                                theme={props.theme}
-                                icon={<DeleteOutlined/>}
-                                onClick={() => deleteBtnOnClick(item)}
-                            >
-                                {"删除"}
-                            </HoverButton>
-                        </Flex>
-                        {index < linkList.length - 1 && <Divider size="small" style={{margin: "0px", borderColor: props.theme.secondaryFontColor}}/>}
-                    </React.Fragment>
+                linkList.map((item) => (
+                    <Flex
+                        key={item.timeStamp}
+                        align="center"
+                        className="quickLinkGroup"
+                        style={{
+                            "--ql-primary": props.theme.primaryColor,
+                            "--ql-primary-font": props.theme.primaryFontColor,
+                            "--ql-secondary-font": props.theme.secondaryFontColor,
+                        } as React.CSSProperties}
+                    >
+                        <Button type={"text"} size={"large"} className="quickLinkBtn quickLinkBtnWithBorder" onClick={() => window.open(item.url, "_blank")}>
+                            {item.name}
+                        </Button>
+                        <Button type={"text"} size={"large"} icon={<DeleteOutlined/>} className="quickLinkBtn" onClick={() => deleteBtnOnClick(item)}/>
+                    </Flex>
                 ))
             )}
         </Flex>
