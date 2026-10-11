@@ -1,0 +1,24 @@
+.quickLinkGroup {
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--ql-primary);
+
+    .quickLinkBtn.ant-btn-text {
+        color: var(--ql-secondary-font) !important;
+        background-color: transparent !important;
+        cursor: pointer;
+        border-radius: 0;
+        transition: all 0.2s;
+
+        &:hover {
+            color: var(--ql-primary-font) !important;
+            background-color: var(--ql-primary) !important;
+        }
+    }
+
+    .quickLinkBtnWithBorder {
+        border-right: 1px solid var(--ql-primary) !important;
+    }
+}
