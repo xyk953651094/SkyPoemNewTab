@@ -28,7 +28,7 @@
         "webpack-cli": "^6.0.1"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "PORT=3001 react-scripts start",
         "build:ext": "webpack --mode=production",
         "dev:ext": "webpack --mode=development --watch"
     },

@@ -229,12 +229,12 @@ function PoemComponent(props: PoemComponentProps) {
                         ))}
                     </Flex>
                 )}
-                <FillButton theme={theme} fontSize="clamp(24px, 2vw, 42px)" onClick={() => {
+                <FillButton theme={theme} fontSize="clamp(26px, 2.3vw, 48px)" onClick={() => {
                     navigator.clipboard.writeText(poemContent).then(() => themedMessage.success("已复制到剪贴板"));
                 }}>
                     {poemContent}
                 </FillButton>
-                <FillButton theme={theme} fontSize="clamp(16px, 1.2vw, 26px)" onClick={() => {
+                <FillButton theme={theme} fontSize="clamp(18px, 1.5vw, 32px)" onClick={() => {
                     navigator.clipboard.writeText(poemAuthor).then(() => themedMessage.success("已复制到剪贴板"));
                 }}>
                     {poemAuthor}

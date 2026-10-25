@@ -1,7 +1,7 @@
 import React, {useRef, useState} from "react";
 import {Button, Drawer, Row, Space, Tooltip} from "antd";
 import {MenuFoldOutlined, StarOutlined, ToTopOutlined} from "@ant-design/icons";
-import {deviceType} from "../TypeScripts/PublicConstants";
+import {browserType, deviceType} from "../TypeScripts/PublicConstants";
 import MenuInfoComponent from "./MenuComponents/MenuInfoComponent";
 import MenuPreferenceComponent from "./MenuComponents/MenuPreferenceComponent";
 import {PreferenceInterface, ThemeInterface} from "../TypeScripts/PublicInterface";
@@ -14,6 +14,12 @@ interface MenuComponentProps {
     preference: PreferenceInterface;
     getPreference: React.Dispatch<React.SetStateAction<PreferenceInterface>>;
 }
+
+const storeLinks: Record<string, string> = {
+    "Chrome": "https://chromewebstore.google.com/detail/jmejjocoghljngodoihgmcdcddnffmlh",
+    "Edge": "https://microsoftedge.microsoft.com/addons/detail/ggjinglegagmholbclbkomkgkijicdie",
+    "Firefox": "https://addons.mozilla.org/zh-CN/firefox/addon/云开诗词新标签页",
+};
 
 function MenuComponent(props: MenuComponentProps) {
     const [displayDrawer, setDisplayDrawer] = useState<boolean>(false);
@@ -66,8 +72,11 @@ function MenuComponent(props: MenuComponentProps) {
                 styles={drawerStyles}
                 title={"菜单栏"}
                 footer={
-                    <HoverButton theme={props.theme} icon={<StarOutlined/>}>
-                        {"如果喜欢这款插件，请考虑五星好评"}
+                    <HoverButton theme={props.theme} icon={<StarOutlined/>} onClick={() => {
+                        const url = storeLinks[browserType];
+                        if (url) window.open(url, "_blank");
+                    }}>
+                        {"觉得好用？给个五星好评吧"}
                     </HoverButton>
                 }
             >

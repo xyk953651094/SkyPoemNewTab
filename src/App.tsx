@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {Col, ConfigProvider, Flex, Layout, notification, Row, Space} from "antd";
+import {useEffect, useState, useRef} from "react";
+import {Col, ConfigProvider, Flex, Layout, notification, Row, Space, Typography} from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import "./StyleSheets/PublicStyles.scss"
 import {getFontColor} from "./TypeScripts/PublicFunctions";
@@ -18,6 +18,13 @@ import WeatherComponent from "./Components/WeatherComponent";
 import GreetComponent from "./Components/GreetComponent";
 
 const {Header, Content, Footer} = Layout;
+const {Text} = Typography;
+
+// 每次发版手动更新此数组
+const updateNotes: string[] = [
+    "新增快速链接功能",
+    "修复已知问题，提升使用体验",
+];
 
 function App() {
     const [theme, setTheme] = useState<ThemeInterface>({
@@ -26,6 +33,8 @@ function App() {
         secondaryFontColor: getFontColor(defaultTheme.secondaryColor),
     });
     const [preference, setPreference] = useState<PreferenceInterface>(defaultPreference);
+    const [storageLoaded, setStorageLoaded] = useState(false);
+    const hasNotifiedRef = useRef(false);
 
     function getTheme(value: any) {
         const newTheme: ThemeInterface = {
@@ -42,6 +51,8 @@ function App() {
     useEffect(() => {
         getExtensionStorage(["preference", "theme"]).then((result) => {
             const [preferenceStorage, themeStorage] = result;
+            // 放在最前：与后续 setTheme/setPreference 同批渲染，且不受 customTheme 分支提前 return 影响
+            setStorageLoaded(true);
             if (preferenceStorage) {
                 const fixedPreference = fixPreference(preferenceStorage);
                 setPreference(fixedPreference);
@@ -71,15 +82,31 @@ function App() {
         });
     }, []);
 
-    // 版本更新通知
+    // 版本更新通知：等 storage 恢复完成后再弹，保证主题色和字体正确
     useEffect(() => {
+        if (hasNotifiedRef.current || !storageLoaded) {
+            return;
+        }
+        hasNotifiedRef.current = true;
         const currentVersion = require("../package.json").version;
         getExtensionStorage(["lastNotifiedVersion"]).then(([lastNotifiedVersion]) => {
             if (lastNotifiedVersion !== currentVersion) {
                 notification.open({
                     icon: null,
                     title: "已更新至版本 V" + currentVersion,
-                    description: "修复已知问题，提升使用体验",
+                    description: (
+                        <Typography style={{marginBottom: 0}}>
+                            <ul style={{marginBottom: 0}}>
+                                {updateNotes.map((note) => (
+                                    <li key={note}>
+                                        <Text style={{color: theme.secondaryFontColor, fontFamily: preference.fontFamily}}>
+                                            {note}
+                                        </Text>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Typography>
+                    ),
                     placement: "bottomLeft",
                     duration: 10,
                     styles : {
@@ -91,7 +118,7 @@ function App() {
                 setExtensionStorage("lastNotifiedVersion", currentVersion);
             }
         });
-    }, []);
+    }, [storageLoaded, theme, preference]);
 
     // 仅负责视觉副作用：设置 body 背景色和文字颜色
     useEffect(() => {
