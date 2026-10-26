@@ -205,6 +205,7 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                                     label: poemTopicLabels[topic],
                                     value: topic,
                                 }))}
+                                size={"large"}
                             />
                         </Form.Item>
                     )}
@@ -215,9 +216,14 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             onChange={fontFamilySelectOnChange}
                             options={[
                                 {value: "LXGWWenKai", label: "霞鹜文楷"},
+                                {value: "LXGWWenKaiLight", label: "霞鹜文楷 Light"},
                                 {value: "LXGWWenKaiTC", label: "霞鹜文楷 · 繁体"},
+                                {value: "LXGWWenKaiTCLight", label: "霞鹜文楷 · 繁体 Light"},
+                                {value: "LXGWNeoXiHei", label: "霞鹜新晰黑"},
+                                {value: "LXGWNeoZhiSong", label: "霞鹜新致宋"},
                                 {value: "LXGWMarkerGothic", label: "霞鹜漫黑"},
                             ]}
+                            size={"large"}
                         />
                     </Form.Item>
                     <Form.Item label={"自定颜色（实验性功能，可能存在问题）"} extra={customThemeState ? "已启用自定义主题颜色" : undefined}>

@@ -7,10 +7,38 @@
     font-display: swap;
 }
 
+// 霞鹜文楷 Light
+@font-face {
+    font-family: 'LXGWWenKaiLight';
+    src: url('../Assets/Fonts/LXGWWenKai-Light.ttf') format('truetype');
+    font-display: swap;
+}
+
 // 霞鹜文楷繁体
 @font-face {
     font-family: 'LXGWWenKaiTC';
     src: url('../Assets/Fonts/LXGWWenKaiTC-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜文楷繁体 Light
+@font-face {
+    font-family: 'LXGWWenKaiTCLight';
+    src: url('../Assets/Fonts/LXGWWenKaiTC-Light.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜新晰黑
+@font-face {
+    font-family: 'LXGWNeoXiHei';
+    src: url('../Assets/Fonts/LXGWNeoXiHei.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 霞鹜新致宋
+@font-face {
+    font-family: 'LXGWNeoZhiSong';
+    src: url('../Assets/Fonts/LXGWNeoZhiSong.ttf') format('truetype');
     font-display: swap;
 }
 

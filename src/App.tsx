@@ -23,7 +23,9 @@ const {Text} = Typography;
 // 每次发版手动更新此数组
 const updateNotes: string[] = [
     "新增快速链接功能",
-    "修复已知问题，提升使用体验",
+    "新增更多字体",
+    "修复已知问题",
+    "提升使用体验"
 ];
 
 function App() {

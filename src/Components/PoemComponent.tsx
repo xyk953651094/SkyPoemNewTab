@@ -278,6 +278,7 @@ function PoemComponent(props: PoemComponentProps) {
                             maxLength={30}
                             showCount
                             allowClear
+                            size={"large"}
                         />
                         <Input
                             placeholder="请输入作者信息"
@@ -286,6 +287,7 @@ function PoemComponent(props: PoemComponentProps) {
                             maxLength={30}
                             showCount
                             allowClear
+                            size={"large"}
                         />
                     {customPoem && (
                         <Flex justify="center">
