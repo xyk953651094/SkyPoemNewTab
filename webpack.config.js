@@ -59,6 +59,16 @@ module.exports = (env, argv) => ({
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
             {
+                test: /\.(ttf|otf|woff2?|eot)$/i,
+                type: 'asset/resource',
+                include: [
+                    path.resolve(__dirname, 'src/Assets/Fonts')
+                ],
+                generator: {
+                    filename: 'Assets/Fonts/[name][ext]'
+                }
+            },
+            {
                 test: /\.mp3$/,
                 type: 'asset/resource',
                 generator: {
@@ -89,6 +99,11 @@ module.exports = (env, argv) => ({
                 {
                     from: path.resolve(__dirname, 'src/Assets'),
                     to: path.resolve(__dirname, 'dist/Assets'),
+                    globOptions: {
+                        // Fonts 已由 webpack 作为 asset/resource 产出，再复制一份会让包体
+                        // 多出二十余兆的重复二进制；IconFont 目前未被任何代码引用
+                        ignore: ['**/Fonts/**', '**/IconFont/**', '**/.DS_Store'],
+                    },
                 },
                 {
                     from: path.resolve(__dirname, 'src/ExtensionFiles'),
