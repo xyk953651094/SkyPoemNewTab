@@ -61,7 +61,7 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
             setInputName("");
             setInputUrl("");
         } else {
-            themedMessage.error(`链接数量最多为${QUICK_LINK_MAX_SIZE}个`);
+            themedMessage.error(`捷径数量最多为${QUICK_LINK_MAX_SIZE}个`);
         }
     }
 
@@ -97,12 +97,12 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
         <Row align={"middle"}>
             <Col span={8}>
                 <Text style={{color: props.theme.secondaryFontColor, fontSize: "16px"}}>
-                    {`快速链接 ${linkList.length} / ${QUICK_LINK_MAX_SIZE}`}
+                    {`捷径 ${linkList.length} / ${QUICK_LINK_MAX_SIZE}`}
                 </Text>
             </Col>
             <Col span={16} style={{textAlign: "right"}}>
                 <HoverButton theme={props.theme} icon={<PlusOutlined/>} onClick={showAddModalBtnOnClick}>
-                    {"添加链接"}
+                    {"添加捷径"}
                 </HoverButton>
             </Col>
         </Row>
@@ -161,14 +161,14 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
             <PublicModal
                 theme={props.theme}
                 open={displayModal}
-                titleText={`添加链接 ${linkList.length} / ${QUICK_LINK_MAX_SIZE}`}
+                titleText={`添加捷径 ${linkList.length} / ${QUICK_LINK_MAX_SIZE}`}
                 titleIcon={<LinkOutlined/>}
                 onOk={modalOkBtnOnClick}
                 onCancel={() => setDisplayModal(false)}
             >
                 <Flex vertical gap="middle">
                     <Input
-                        placeholder="请输入链接名称"
+                        placeholder="请输入捷径名称"
                         size={"large"}
                         value={inputName}
                         onChange={(e) => setInputName(e.target.value)}
@@ -177,7 +177,7 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
                         allowClear
                     />
                     <Input
-                        placeholder="请输入链接地址，例如：https://www.example.com"
+                        placeholder="请输入捷径地址，例如：https://www.example.com"
                         size={"large"}
                         value={inputUrl}
                         onChange={(e) => setInputUrl(e.target.value)}
