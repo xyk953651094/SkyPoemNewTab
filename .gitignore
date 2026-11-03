@@ -11,6 +11,16 @@
 # production
 /build
 
+# extension build output
+/dist
+
+# local review notes & tooling
+CODE_REVIEW.md
+.workbuddy/
+
+# IDE local files（.idea 下已跟踪的配置不受影响）
+.idea/*.xml
+
 # misc
 .DS_Store
 .env.local

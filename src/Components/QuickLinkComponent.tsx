@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {
     Button,
     Col,
+    Divider,
     Empty,
     Flex,
     Input,
@@ -10,9 +11,10 @@ import {
     Row,
     Typography
 } from "antd";
-import {DeleteOutlined, LinkOutlined, PlusOutlined} from "@ant-design/icons";
-import {createThemedMessage} from "../TypeScripts/PublicFunctions";
+import {DeleteOutlined, LinkOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
+import {changeButtonTheme, createThemedMessage} from "../TypeScripts/PublicFunctions";
 import {ThemeInterface} from "../TypeScripts/PublicInterface";
+import {getSearchEngineDetail} from "../TypeScripts/SearchComponent";
 import {getExtensionStorage, setExtensionStorage, removeExtensionStorage} from "../TypeScripts/StorageFunctions";
 import {HoverButton} from "./PublicComponents/PublicButton";
 import {PublicModal} from "./PublicComponents/PublicModal";
@@ -21,6 +23,10 @@ import "../StyleSheets/QuickLinkComponent.scss";
 const {Text} = Typography;
 const QUICK_LINK_MAX_SIZE = 5;
 const STORAGE_KEY_QUICK_LINKS = "quickLinks";
+const STORAGE_KEY_SEARCH_ENGINE = "searchEngine";
+
+// 可循环切换的搜索引擎
+const SEARCH_ENGINES = ["bing", "google"];
 
 interface QuickLinkItem {
     name: string;
@@ -37,7 +43,10 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
     const [displayModal, setDisplayModal] = useState<boolean>(false);
     const [inputName, setInputName] = useState<string>("");
     const [inputUrl, setInputUrl] = useState<string>("");
+    const [searchValue, setSearchValue] = useState<string>("");
+    const [searchEngine, setSearchEngine] = useState<string>("bing");
 
+    const searchEngineDetail = getSearchEngineDetail(searchEngine);
     const themedMessage = createThemedMessage(props.theme, undefined, message);
 
     async function saveLinkList(list: QuickLinkItem[]) {
@@ -84,10 +93,28 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
         themedMessage.success("添加成功");
     }
 
+    // 切换到下一个搜索引擎并持久化
+    function searchEngineBtnOnClick() {
+        const nextEngine = SEARCH_ENGINES[(SEARCH_ENGINES.indexOf(searchEngine) + 1) % SEARCH_ENGINES.length];
+        setSearchEngine(nextEngine);
+        setExtensionStorage(STORAGE_KEY_SEARCH_ENGINE, nextEngine);
+    }
+
+    // 按下回车执行搜索
+    function inputOnPressEnter() {
+        const keyword = searchValue.trim();
+        if (keyword) {
+            window.open(searchEngineDetail.searchEngineUrl + encodeURIComponent(keyword), "_self");
+        }
+    }
+
     useEffect(() => {
         async function loadFromStorage() {
-            const [storedLinks] = await getExtensionStorage([STORAGE_KEY_QUICK_LINKS]);
+            const [storedLinks, storedEngine] = await getExtensionStorage([STORAGE_KEY_QUICK_LINKS, STORAGE_KEY_SEARCH_ENGINE]);
             setLinkList(storedLinks ?? []);
+            if (storedEngine && SEARCH_ENGINES.includes(storedEngine)) {
+                setSearchEngine(storedEngine);
+            }
         }
 
         loadFromStorage();
@@ -109,31 +136,59 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
     );
 
     const popoverContent = (
-        <Flex wrap="wrap" gap="small" style={linkList.length === 0 ? {minHeight: "100px", alignContent: "center", justifyContent: "center"} : undefined}>
-            {linkList.length === 0 ? (
-                <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    styles={{description: {color: props.theme.secondaryFontColor}}}
-                />
-            ) : (
-                linkList.map((item) => (
-                    <Flex
-                        key={item.timeStamp}
-                        align="center"
-                        className="quickLinkGroup"
-                        style={{
-                            "--ql-primary": props.theme.primaryColor,
-                            "--ql-primary-font": props.theme.primaryFontColor,
-                            "--ql-secondary-font": props.theme.secondaryFontColor,
-                        } as React.CSSProperties}
-                    >
-                        <Button type={"text"} size={"large"} className="quickLinkBtn quickLinkBtnWithBorder" onClick={() => window.open(item.url, "_blank")}>
-                            {item.name}
+        <Flex vertical gap={"middle"}>
+            <Input
+                size={"large"}
+                style={{width: "100%"}}
+                placeholder={"按下 Enter 键搜索"}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onPressEnter={inputOnPressEnter}
+                prefix={
+                    <>
+                        <Button
+                            type={"text"}
+                            size={"small"}
+                            icon={<i className={"bi bi-" + searchEngine}/>}
+                            style={{color: "#000000", cursor: "pointer"}}
+                            onClick={searchEngineBtnOnClick}
+                            onMouseOver={(e) => changeButtonTheme(props.theme.primaryColor, props.theme.primaryFontColor, e)}
+                            onMouseOut={(e) => changeButtonTheme("transparent", "#000000", e)}
+                        >
+                            {searchEngineDetail.searchEngineName}
                         </Button>
-                        <Button type={"text"} size={"large"} icon={<DeleteOutlined/>} className="quickLinkBtn" onClick={() => deleteBtnOnClick(item)}/>
-                    </Flex>
-                ))
-            )}
+                        <Divider orientation={"vertical"} style={{borderColor: props.theme.secondaryColor}}/>
+                    </>
+                }
+                suffix={<SearchOutlined/>}
+            />
+            <Flex wrap="wrap" gap="small" style={linkList.length === 0 ? {minHeight: "100px", alignContent: "center", justifyContent: "center"} : undefined}>
+                {linkList.length === 0 ? (
+                    <Empty
+                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                        description={"暂无捷径"}
+                        styles={{description: {color: props.theme.secondaryFontColor}}}
+                    />
+                ) : (
+                    linkList.map((item) => (
+                        <Flex
+                            key={item.timeStamp}
+                            align="center"
+                            className="quickLinkGroup"
+                            style={{
+                                "--ql-primary": props.theme.primaryColor,
+                                "--ql-primary-font": props.theme.primaryFontColor,
+                                "--ql-secondary-font": props.theme.secondaryFontColor,
+                            } as React.CSSProperties}
+                        >
+                            <Button type={"text"} size={"large"} className="quickLinkBtn quickLinkBtnWithBorder" onClick={() => window.open(item.url, "_blank")}>
+                                {item.name}
+                            </Button>
+                            <Button type={"text"} size={"large"} icon={<DeleteOutlined/>} className="quickLinkBtn" onClick={() => deleteBtnOnClick(item)}/>
+                        </Flex>
+                    ))
+                )}
+            </Flex>
         </Flex>
     );
 
@@ -144,10 +199,10 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
                 content={popoverContent}
                 placement="bottomRight"
                 color={props.theme.secondaryColor}
-                styles={{root: {minWidth: "400px"}}}
+                styles={{root: {minWidth: "600px"}}}
             >
                 <Button
-                    icon={<LinkOutlined/>}
+                    icon={<SearchOutlined/>}
                     size={"large"}
                     type={"primary"}
                     className={"floatingButton"}
@@ -172,7 +227,7 @@ function QuickLinkComponent(props: QuickLinkComponentProps) {
                         size={"large"}
                         value={inputName}
                         onChange={(e) => setInputName(e.target.value)}
-                        maxLength={10}
+                        maxLength={5}
                         showCount
                         allowClear
                     />

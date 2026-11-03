@@ -8,14 +8,15 @@ interface HoverButtonProps {
     theme: ThemeInterface;
     icon?: React.ReactNode;
     children?: React.ReactNode;
+    size?: "small" | "middle" | "large";
     onClick?: () => void;
     href?: string;
     target?: string;
 }
 
-export function HoverButton({theme, icon, children, onClick, href, target}: HoverButtonProps) {
+export function HoverButton({theme, icon, children, size = "large", onClick, href, target}: HoverButtonProps) {
     return (
-        <Button type={"text"} size={"large"}
+        <Button type={"text"} size={size}
                 icon={icon}
                 style={{
                     color: theme.secondaryFontColor,

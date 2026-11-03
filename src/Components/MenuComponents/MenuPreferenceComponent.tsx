@@ -5,7 +5,7 @@ import type {ColorPickerProps, GetProp} from "antd";
 import {ThemeInterface, PreferenceInterface} from "../../TypeScripts/PublicInterface";
 import {createThemedMessage} from "../../TypeScripts/PublicFunctions";
 import {setExtensionStorage, clearExtensionStorage, getExtensionStorage} from "../../TypeScripts/StorageFunctions";
-import {defaultPreference, poemTopics} from "../../TypeScripts/PublicConstants";
+import {defaultPreference, poemTopics, fontFamilyLabels} from "../../TypeScripts/PublicConstants";
 import {HoverButton} from "../PublicComponents/PublicButton";
 import {PublicModal} from "../PublicComponents/PublicModal";
 
@@ -214,15 +214,8 @@ function MenuPreferenceComponent(props: MenuPreferenceComponentProps) {
                             style={{width: "100%"}}
                             value={preference.fontFamily}
                             onChange={fontFamilySelectOnChange}
-                            options={[
-                                {value: "LXGWWenKai", label: "霞鹜文楷"},
-                                {value: "LXGWWenKaiLight", label: "霞鹜文楷 Light"},
-                                {value: "LXGWWenKaiTC", label: "霞鹜文楷 · 繁体"},
-                                {value: "LXGWWenKaiTCLight", label: "霞鹜文楷 · 繁体 Light"},
-                                {value: "LXGWNeoXiHei", label: "霞鹜新晰黑"},
-                                {value: "LXGWNeoZhiSong", label: "霞鹜新致宋"},
-                                {value: "LXGWMarkerGothic", label: "霞鹜漫黑"},
-                            ]}
+                            options={(Object.keys(fontFamilyLabels) as PreferenceInterface["fontFamily"][])
+                                .map(value => ({value, label: fontFamilyLabels[value]}))}
                             size={"large"}
                         />
                     </Form.Item>

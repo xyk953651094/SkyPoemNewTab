@@ -49,6 +49,27 @@
     font-display: swap;
 }
 
+// 小赖字体
+@font-face {
+    font-family: 'Xiaolai';
+    src: url('../Assets/Fonts/Xiaolai-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 悠哉字体
+@font-face {
+    font-family: 'Yozai';
+    src: url('../Assets/Fonts/Yozai-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+// 悠哉字体 Light
+@font-face {
+    font-family: 'YozaiLight';
+    src: url('../Assets/Fonts/Yozai-Light.ttf') format('truetype');
+    font-display: swap;
+}
+
 $heightRegular: 100px;
 $heightLarge: 300px;
 $desktop-large: "screen and (min-width: 2000px) and (orientation: landscape)";

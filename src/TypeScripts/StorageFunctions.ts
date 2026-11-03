@@ -1,7 +1,7 @@
 /// <reference types="chrome" />
 /// <reference types="firefox-webext-browser" />
 
-import {defaultPreference, browserType} from "./PublicConstants";
+import {defaultPreference, browserType, fontFamilyLabels} from "./PublicConstants";
 import {PreferenceInterface} from "./PublicInterface";
 
 // 统一存储接口
@@ -108,18 +108,6 @@ export async function clearExtensionStorage() {
 export function fixPreference(preference: PreferenceInterface): PreferenceInterface {
     let isFixed = false;
 
-    // 旧版 simpleMode 迁移为 5 个独立字段
-    if ("simpleMode" in (preference as any)) {
-        const wasSimple = !(preference as any).simpleMode;
-        (preference as any).showGreet = wasSimple;
-        (preference as any).showWeather = wasSimple;
-        (preference as any).showTodo = wasSimple;
-        (preference as any).showCountdown = wasSimple;
-        (preference as any).showFocus = wasSimple;
-        delete (preference as any).simpleMode;
-        isFixed = true;
-    }
-
     for (const [key, defaultValue] of Object.entries(defaultPreference)) {
         if ((preference as any)[key] === undefined || (preference as any)[key] === null) {
             (preference as any)[key] = defaultValue;
@@ -127,9 +115,7 @@ export function fixPreference(preference: PreferenceInterface): PreferenceInterf
         }
     }
 
-    // 旧版系统字体值已移除，统一迁移到霞鹜文楷
-    const removedFonts = ["sansSerif", "serif", "sans-serif", "cursive", "LXGWZhenKai"];
-    if (removedFonts.includes((preference as any).fontFamily)) {
+    if (!Object.keys(fontFamilyLabels).includes((preference as any).fontFamily)) {
         (preference as any).fontFamily = "LXGWWenKai";
         isFixed = true;
     }

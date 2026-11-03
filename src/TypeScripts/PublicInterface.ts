@@ -21,6 +21,6 @@ export interface PreferenceInterface {
     showQuickLink: boolean;
     poemSource: "smart" | "preset",
     poemTopic: string,
-    fontFamily: "LXGWWenKai" | "LXGWWenKaiLight" | "LXGWWenKaiTC" | "LXGWWenKaiTCLight" | "LXGWNeoXiHei" | "LXGWNeoZhiSong" | "LXGWMarkerGothic",
+    fontFamily: "LXGWWenKai" | "LXGWWenKaiLight" | "LXGWWenKaiTC" | "LXGWWenKaiTCLight" | "LXGWNeoXiHei" | "LXGWNeoZhiSong" | "LXGWMarkerGothic" | "Xiaolai" | "Yozai" | "YozaiLight",
     customTheme: CustomThemeInterface | null
 }

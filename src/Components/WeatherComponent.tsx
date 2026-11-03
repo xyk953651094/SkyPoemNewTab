@@ -28,7 +28,7 @@ function getWeatherIcon(weather: string): string {
     if (weather.includes("雪")) return "bi bi-cloud-snow";
     if (weather.includes("雨")) return weather.includes("暴") ? "bi bi-cloud-rain-heavy" : "bi bi-cloud-rain";
     if (weather.includes("雾")) return "bi bi-cloud-fog";
-    if (weather.includes("霾")) return "bi bi-haze";
+    if (weather.includes("霾")) return "bi bi-cloud-haze";
     if (weather.includes("沙尘") || weather.includes("扬沙")) return "bi bi-wind";
     if (weather.includes("阴")) return "bi bi-cloud";
     if (weather.includes("多云")) return "bi bi-cloud-sun";

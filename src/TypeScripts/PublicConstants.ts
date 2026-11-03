@@ -20,6 +20,20 @@ export const defaultPreference: PreferenceInterface = {
     customTheme: null
 }
 
+// 字体中文名，声明顺序即菜单展示顺序；新增字体时编译器会强制此处同步
+export const fontFamilyLabels: Record<PreferenceInterface["fontFamily"], string> = {
+    LXGWWenKai: "霞鹜文楷",
+    LXGWWenKaiLight: "霞鹜文楷 Light",
+    LXGWWenKaiTC: "霞鹜文楷 · 繁体",
+    LXGWWenKaiTCLight: "霞鹜文楷 · 繁体 Light",
+    LXGWNeoXiHei: "霞鹜新晰黑",
+    LXGWNeoZhiSong: "霞鹜新致宋",
+    LXGWMarkerGothic: "霞鹜漫黑",
+    Xiaolai: "小赖字体",
+    Yozai: "悠哉字体",
+    YozaiLight: "悠哉字体 Light",
+}
+
 export const defaultTheme = {
     primaryColor: '#A29192',
     secondaryColor: '#444C5E',
