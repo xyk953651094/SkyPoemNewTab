@@ -7,24 +7,10 @@
     font-display: swap;
 }
 
-// 霞鹜文楷 Light
-@font-face {
-    font-family: 'LXGWWenKaiLight';
-    src: url('../Assets/Fonts/LXGWWenKai-Light.ttf') format('truetype');
-    font-display: swap;
-}
-
 // 霞鹜文楷繁体
 @font-face {
     font-family: 'LXGWWenKaiTC';
     src: url('../Assets/Fonts/LXGWWenKaiTC-Regular.ttf') format('truetype');
-    font-display: swap;
-}
-
-// 霞鹜文楷繁体 Light
-@font-face {
-    font-family: 'LXGWWenKaiTCLight';
-    src: url('../Assets/Fonts/LXGWWenKaiTC-Light.ttf') format('truetype');
     font-display: swap;
 }
 
@@ -60,13 +46,6 @@
 @font-face {
     font-family: 'Yozai';
     src: url('../Assets/Fonts/Yozai-Regular.ttf') format('truetype');
-    font-display: swap;
-}
-
-// 悠哉字体 Light
-@font-face {
-    font-family: 'YozaiLight';
-    src: url('../Assets/Fonts/Yozai-Light.ttf') format('truetype');
     font-display: swap;
 }
 
