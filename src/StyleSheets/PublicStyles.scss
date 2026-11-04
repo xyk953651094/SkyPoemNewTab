@@ -14,13 +14,6 @@
     font-display: swap;
 }
 
-// 霞鹜新晰黑
-@font-face {
-    font-family: 'LXGWNeoXiHei';
-    src: url('../Assets/Fonts/LXGWNeoXiHei.ttf') format('truetype');
-    font-display: swap;
-}
-
 // 霞鹜新致宋
 @font-face {
     font-family: 'LXGWNeoZhiSong';
@@ -28,24 +21,24 @@
     font-display: swap;
 }
 
-// 霞鹜漫黑
+// 汇文仿宋
 @font-face {
-    font-family: 'LXGWMarkerGothic';
-    src: url('../Assets/Fonts/LXGWMarkerGothic-Regular.ttf') format('truetype');
+    font-family: 'HuiwenFangsong';
+    src: url('../Assets/Fonts/huiwenfangsong.ttf') format('truetype');
     font-display: swap;
 }
 
-// 小赖字体
+// 汇文正楷
 @font-face {
-    font-family: 'Xiaolai';
-    src: url('../Assets/Fonts/Xiaolai-Regular.ttf') format('truetype');
+    font-family: 'HuiwenZhengkai';
+    src: url('../Assets/Fonts/huiwenzhengkai.ttf') format('truetype');
     font-display: swap;
 }
 
-// 悠哉字体
+// 京华老宋体
 @font-face {
-    font-family: 'Yozai';
-    src: url('../Assets/Fonts/Yozai-Regular.ttf') format('truetype');
+    font-family: 'KingHwaOldSong';
+    src: url('../Assets/Fonts/jinghualaosongti.ttf') format('truetype');
     font-display: swap;
 }
 

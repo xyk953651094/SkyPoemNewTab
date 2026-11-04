@@ -24,11 +24,10 @@ export const defaultPreference: PreferenceInterface = {
 export const fontFamilyLabels: Record<PreferenceInterface["fontFamily"], string> = {
     LXGWWenKai: "霞鹜文楷",
     LXGWWenKaiTC: "霞鹜文楷 · 繁体",
-    LXGWNeoXiHei: "霞鹜新晰黑",
     LXGWNeoZhiSong: "霞鹜新致宋",
-    LXGWMarkerGothic: "霞鹜漫黑",
-    Xiaolai: "小赖字体",
-    Yozai: "悠哉字体",
+    HuiwenFangsong: "汇文仿宋",
+    HuiwenZhengkai: "汇文正楷",
+    KingHwaOldSong: "京华老宋体",
 }
 
 export const defaultTheme = {
