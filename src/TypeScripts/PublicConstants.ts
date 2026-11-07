@@ -5,7 +5,7 @@ import {getBrowserType, getDeviceType} from "./PublicFunctions";
 export const deviceType = getDeviceType();  // 获取当前设备类型
 export const browserType = getBrowserType();
 export const colorRegExp = /^#[0-9A-Fa-f]{6}$/;
-export const poemSwitchingInterval = 0;  // 临时：截图用，每次加载都换诗（正式值 3600000，一小时）
+export const poemSwitchingInterval = 3600000;  // 图片切换间隔默认一小时 3600000
 
 export const defaultPreference: PreferenceInterface = {
     showGreet: true,
