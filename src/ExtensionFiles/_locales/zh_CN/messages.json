@@ -4,7 +4,7 @@
         "description": "extension_name"
     },
     "extensionDescription": {
-        "message": "打开新标签页，品读经典中国古诗词。搭配倒数日、待办事项、舒缓白噪音，在浏览间隙，记录日程。也可一键切换简洁模式，隐藏全部工具，只留清雅诗文",
+        "message": "打开新标签页，品读经典中国古诗词。搭配计日、事目、入静等组件，在浏览间隙，记录日程。也可随心所欲，一键隐藏多余组件，只留清雅诗文",
         "description": "extension_description"
     },
     "extensionDefaultTitle": {
